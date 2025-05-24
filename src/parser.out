@@ -1,0 +1,1654 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    COMMA
+    UMINUS
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> PROGRAM COLON ID SEMICOLON declarations statements
+Rule 2     program -> PROGRAM COLON ID SEMICOLON declarations
+Rule 3     declarations -> DECIDS COLON vars_declarations
+Rule 4     declarations -> empty
+Rule 5     vars_declarations -> var_declaration
+Rule 6     vars_declarations -> var_declaration vars_declarations
+Rule 7     var_declaration -> ID COLON type SEMICOLON
+Rule 8     type -> INT
+Rule 9     type -> FLOAT
+Rule 10    empty -> <empty>
+Rule 11    statements -> statement_list
+Rule 12    statement_list -> statement
+Rule 13    statement_list -> statement statement_list
+Rule 14    statement -> assignment_statement
+Rule 15    statement -> if_statement
+Rule 16    statement -> while_statement
+Rule 17    statement -> for_statement
+Rule 18    statement -> print_statement
+Rule 19    statement -> input_statement
+Rule 20    statement -> block_statement
+Rule 21    assignment_statement -> assignment SEMICOLON
+Rule 22    print_statement -> PRINT LPAREN expression RPAREN SEMICOLON
+Rule 23    input_statement -> INPUT LPAREN ID RPAREN SEMICOLON
+Rule 24    block_statement -> LBRACE statements RBRACE
+Rule 25    block_statement -> LBRACE RBRACE
+Rule 26    assignment -> ID ASSIGN expression
+Rule 27    assignment -> ID INCREMENT
+Rule 28    assignment -> ID DECREMENT
+Rule 29    if_statement -> IF LPAREN condition RPAREN statement
+Rule 30    if_statement -> IF LPAREN condition RPAREN statement ELSE statement
+Rule 31    while_statement -> WHILE LPAREN condition RPAREN statement
+Rule 32    for_statement -> FOR LPAREN assignment COLON condition COLON assignment RPAREN statement
+Rule 33    condition -> expression comparison expression
+Rule 34    condition -> NOT condition
+Rule 35    comparison -> EQUALS
+Rule 36    comparison -> NEQUALS
+Rule 37    comparison -> GT
+Rule 38    comparison -> LT
+Rule 39    expression -> term
+Rule 40    expression -> expression PLUS term
+Rule 41    expression -> expression MINUS term
+Rule 42    term -> factor
+Rule 43    term -> term TIMES factor
+Rule 44    term -> term DIVIDE factor
+Rule 45    factor -> ID
+Rule 46    factor -> NUMBER
+Rule 47    factor -> LPAREN expression RPAREN
+Rule 48    factor -> MINUS factor
+
+Terminals, with rules where they appear
+
+ASSIGN               : 26
+COLON                : 1 2 3 7 32 32
+COMMA                : 
+DECIDS               : 3
+DECREMENT            : 28
+DIVIDE               : 44
+ELSE                 : 30
+EQUALS               : 35
+FLOAT                : 9
+FOR                  : 32
+GT                   : 37
+ID                   : 1 2 7 23 26 27 28 45
+IF                   : 29 30
+INCREMENT            : 27
+INPUT                : 23
+INT                  : 8
+LBRACE               : 24 25
+LPAREN               : 22 23 29 30 31 32 47
+LT                   : 38
+MINUS                : 41 48
+NEQUALS              : 36
+NOT                  : 34
+NUMBER               : 46
+PLUS                 : 40
+PRINT                : 22
+PROGRAM              : 1 2
+RBRACE               : 24 25
+RPAREN               : 22 23 29 30 31 32 47
+SEMICOLON            : 1 2 7 21 22 23
+TIMES                : 43
+UMINUS               : 
+WHILE                : 31
+error                : 
+
+Nonterminals, with rules where they appear
+
+assignment           : 21 32 32
+assignment_statement : 14
+block_statement      : 20
+comparison           : 33
+condition            : 29 30 31 32 34
+declarations         : 1 2
+empty                : 4
+expression           : 22 26 33 33 40 41 47
+factor               : 42 43 44 48
+for_statement        : 17
+if_statement         : 15
+input_statement      : 19
+print_statement      : 18
+program              : 0
+statement            : 12 13 29 30 30 31 32
+statement_list       : 11 13
+statements           : 1 24
+term                 : 39 40 41 43 44
+type                 : 7
+var_declaration      : 5 6
+vars_declarations    : 3 6
+while_statement      : 16
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . PROGRAM COLON ID SEMICOLON declarations statements
+    (2) program -> . PROGRAM COLON ID SEMICOLON declarations
+
+    PROGRAM         shift and go to state 2
+
+    program                        shift and go to state 1
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> PROGRAM . COLON ID SEMICOLON declarations statements
+    (2) program -> PROGRAM . COLON ID SEMICOLON declarations
+
+    COLON           shift and go to state 3
+
+
+state 3
+
+    (1) program -> PROGRAM COLON . ID SEMICOLON declarations statements
+    (2) program -> PROGRAM COLON . ID SEMICOLON declarations
+
+    ID              shift and go to state 4
+
+
+state 4
+
+    (1) program -> PROGRAM COLON ID . SEMICOLON declarations statements
+    (2) program -> PROGRAM COLON ID . SEMICOLON declarations
+
+    SEMICOLON       shift and go to state 5
+
+
+state 5
+
+    (1) program -> PROGRAM COLON ID SEMICOLON . declarations statements
+    (2) program -> PROGRAM COLON ID SEMICOLON . declarations
+    (3) declarations -> . DECIDS COLON vars_declarations
+    (4) declarations -> . empty
+    (10) empty -> .
+
+    DECIDS          shift and go to state 7
+    IF              reduce using rule 10 (empty -> .)
+    WHILE           reduce using rule 10 (empty -> .)
+    FOR             reduce using rule 10 (empty -> .)
+    PRINT           reduce using rule 10 (empty -> .)
+    INPUT           reduce using rule 10 (empty -> .)
+    LBRACE          reduce using rule 10 (empty -> .)
+    ID              reduce using rule 10 (empty -> .)
+    $end            reduce using rule 10 (empty -> .)
+
+    declarations                   shift and go to state 6
+    empty                          shift and go to state 8
+
+state 6
+
+    (1) program -> PROGRAM COLON ID SEMICOLON declarations . statements
+    (2) program -> PROGRAM COLON ID SEMICOLON declarations .
+    (11) statements -> . statement_list
+    (12) statement_list -> . statement
+    (13) statement_list -> . statement statement_list
+    (14) statement -> . assignment_statement
+    (15) statement -> . if_statement
+    (16) statement -> . while_statement
+    (17) statement -> . for_statement
+    (18) statement -> . print_statement
+    (19) statement -> . input_statement
+    (20) statement -> . block_statement
+    (21) assignment_statement -> . assignment SEMICOLON
+    (29) if_statement -> . IF LPAREN condition RPAREN statement
+    (30) if_statement -> . IF LPAREN condition RPAREN statement ELSE statement
+    (31) while_statement -> . WHILE LPAREN condition RPAREN statement
+    (32) for_statement -> . FOR LPAREN assignment COLON condition COLON assignment RPAREN statement
+    (22) print_statement -> . PRINT LPAREN expression RPAREN SEMICOLON
+    (23) input_statement -> . INPUT LPAREN ID RPAREN SEMICOLON
+    (24) block_statement -> . LBRACE statements RBRACE
+    (25) block_statement -> . LBRACE RBRACE
+    (26) assignment -> . ID ASSIGN expression
+    (27) assignment -> . ID INCREMENT
+    (28) assignment -> . ID DECREMENT
+
+    $end            reduce using rule 2 (program -> PROGRAM COLON ID SEMICOLON declarations .)
+    IF              shift and go to state 21
+    WHILE           shift and go to state 22
+    FOR             shift and go to state 23
+    PRINT           shift and go to state 24
+    INPUT           shift and go to state 25
+    LBRACE          shift and go to state 26
+    ID              shift and go to state 9
+
+    statements                     shift and go to state 10
+    statement_list                 shift and go to state 11
+    statement                      shift and go to state 12
+    assignment_statement           shift and go to state 13
+    if_statement                   shift and go to state 14
+    while_statement                shift and go to state 15
+    for_statement                  shift and go to state 16
+    print_statement                shift and go to state 17
+    input_statement                shift and go to state 18
+    block_statement                shift and go to state 19
+    assignment                     shift and go to state 20
+
+state 7
+
+    (3) declarations -> DECIDS . COLON vars_declarations
+
+    COLON           shift and go to state 27
+
+
+state 8
+
+    (4) declarations -> empty .
+
+    IF              reduce using rule 4 (declarations -> empty .)
+    WHILE           reduce using rule 4 (declarations -> empty .)
+    FOR             reduce using rule 4 (declarations -> empty .)
+    PRINT           reduce using rule 4 (declarations -> empty .)
+    INPUT           reduce using rule 4 (declarations -> empty .)
+    LBRACE          reduce using rule 4 (declarations -> empty .)
+    ID              reduce using rule 4 (declarations -> empty .)
+    $end            reduce using rule 4 (declarations -> empty .)
+
+
+state 9
+
+    (26) assignment -> ID . ASSIGN expression
+    (27) assignment -> ID . INCREMENT
+    (28) assignment -> ID . DECREMENT
+
+    ASSIGN          shift and go to state 28
+    INCREMENT       shift and go to state 29
+    DECREMENT       shift and go to state 30
+
+
+state 10
+
+    (1) program -> PROGRAM COLON ID SEMICOLON declarations statements .
+
+    $end            reduce using rule 1 (program -> PROGRAM COLON ID SEMICOLON declarations statements .)
+
+
+state 11
+
+    (11) statements -> statement_list .
+
+    $end            reduce using rule 11 (statements -> statement_list .)
+    RBRACE          reduce using rule 11 (statements -> statement_list .)
+
+
+state 12
+
+    (12) statement_list -> statement .
+    (13) statement_list -> statement . statement_list
+    (12) statement_list -> . statement
+    (13) statement_list -> . statement statement_list
+    (14) statement -> . assignment_statement
+    (15) statement -> . if_statement
+    (16) statement -> . while_statement
+    (17) statement -> . for_statement
+    (18) statement -> . print_statement
+    (19) statement -> . input_statement
+    (20) statement -> . block_statement
+    (21) assignment_statement -> . assignment SEMICOLON
+    (29) if_statement -> . IF LPAREN condition RPAREN statement
+    (30) if_statement -> . IF LPAREN condition RPAREN statement ELSE statement
+    (31) while_statement -> . WHILE LPAREN condition RPAREN statement
+    (32) for_statement -> . FOR LPAREN assignment COLON condition COLON assignment RPAREN statement
+    (22) print_statement -> . PRINT LPAREN expression RPAREN SEMICOLON
+    (23) input_statement -> . INPUT LPAREN ID RPAREN SEMICOLON
+    (24) block_statement -> . LBRACE statements RBRACE
+    (25) block_statement -> . LBRACE RBRACE
+    (26) assignment -> . ID ASSIGN expression
+    (27) assignment -> . ID INCREMENT
+    (28) assignment -> . ID DECREMENT
+
+    $end            reduce using rule 12 (statement_list -> statement .)
+    RBRACE          reduce using rule 12 (statement_list -> statement .)
+    IF              shift and go to state 21
+    WHILE           shift and go to state 22
+    FOR             shift and go to state 23
+    PRINT           shift and go to state 24
+    INPUT           shift and go to state 25
+    LBRACE          shift and go to state 26
+    ID              shift and go to state 9
+
+    statement                      shift and go to state 12
+    statement_list                 shift and go to state 31
+    assignment_statement           shift and go to state 13
+    if_statement                   shift and go to state 14
+    while_statement                shift and go to state 15
+    for_statement                  shift and go to state 16
+    print_statement                shift and go to state 17
+    input_statement                shift and go to state 18
+    block_statement                shift and go to state 19
+    assignment                     shift and go to state 20
+
+state 13
+
+    (14) statement -> assignment_statement .
+
+    IF              reduce using rule 14 (statement -> assignment_statement .)
+    WHILE           reduce using rule 14 (statement -> assignment_statement .)
+    FOR             reduce using rule 14 (statement -> assignment_statement .)
+    PRINT           reduce using rule 14 (statement -> assignment_statement .)
+    INPUT           reduce using rule 14 (statement -> assignment_statement .)
+    LBRACE          reduce using rule 14 (statement -> assignment_statement .)
+    ID              reduce using rule 14 (statement -> assignment_statement .)
+    $end            reduce using rule 14 (statement -> assignment_statement .)
+    RBRACE          reduce using rule 14 (statement -> assignment_statement .)
+    ELSE            reduce using rule 14 (statement -> assignment_statement .)
+
+
+state 14
+
+    (15) statement -> if_statement .
+
+    IF              reduce using rule 15 (statement -> if_statement .)
+    WHILE           reduce using rule 15 (statement -> if_statement .)
+    FOR             reduce using rule 15 (statement -> if_statement .)
+    PRINT           reduce using rule 15 (statement -> if_statement .)
+    INPUT           reduce using rule 15 (statement -> if_statement .)
+    LBRACE          reduce using rule 15 (statement -> if_statement .)
+    ID              reduce using rule 15 (statement -> if_statement .)
+    $end            reduce using rule 15 (statement -> if_statement .)
+    RBRACE          reduce using rule 15 (statement -> if_statement .)
+    ELSE            reduce using rule 15 (statement -> if_statement .)
+
+
+state 15
+
+    (16) statement -> while_statement .
+
+    IF              reduce using rule 16 (statement -> while_statement .)
+    WHILE           reduce using rule 16 (statement -> while_statement .)
+    FOR             reduce using rule 16 (statement -> while_statement .)
+    PRINT           reduce using rule 16 (statement -> while_statement .)
+    INPUT           reduce using rule 16 (statement -> while_statement .)
+    LBRACE          reduce using rule 16 (statement -> while_statement .)
+    ID              reduce using rule 16 (statement -> while_statement .)
+    $end            reduce using rule 16 (statement -> while_statement .)
+    RBRACE          reduce using rule 16 (statement -> while_statement .)
+    ELSE            reduce using rule 16 (statement -> while_statement .)
+
+
+state 16
+
+    (17) statement -> for_statement .
+
+    IF              reduce using rule 17 (statement -> for_statement .)
+    WHILE           reduce using rule 17 (statement -> for_statement .)
+    FOR             reduce using rule 17 (statement -> for_statement .)
+    PRINT           reduce using rule 17 (statement -> for_statement .)
+    INPUT           reduce using rule 17 (statement -> for_statement .)
+    LBRACE          reduce using rule 17 (statement -> for_statement .)
+    ID              reduce using rule 17 (statement -> for_statement .)
+    $end            reduce using rule 17 (statement -> for_statement .)
+    RBRACE          reduce using rule 17 (statement -> for_statement .)
+    ELSE            reduce using rule 17 (statement -> for_statement .)
+
+
+state 17
+
+    (18) statement -> print_statement .
+
+    IF              reduce using rule 18 (statement -> print_statement .)
+    WHILE           reduce using rule 18 (statement -> print_statement .)
+    FOR             reduce using rule 18 (statement -> print_statement .)
+    PRINT           reduce using rule 18 (statement -> print_statement .)
+    INPUT           reduce using rule 18 (statement -> print_statement .)
+    LBRACE          reduce using rule 18 (statement -> print_statement .)
+    ID              reduce using rule 18 (statement -> print_statement .)
+    $end            reduce using rule 18 (statement -> print_statement .)
+    RBRACE          reduce using rule 18 (statement -> print_statement .)
+    ELSE            reduce using rule 18 (statement -> print_statement .)
+
+
+state 18
+
+    (19) statement -> input_statement .
+
+    IF              reduce using rule 19 (statement -> input_statement .)
+    WHILE           reduce using rule 19 (statement -> input_statement .)
+    FOR             reduce using rule 19 (statement -> input_statement .)
+    PRINT           reduce using rule 19 (statement -> input_statement .)
+    INPUT           reduce using rule 19 (statement -> input_statement .)
+    LBRACE          reduce using rule 19 (statement -> input_statement .)
+    ID              reduce using rule 19 (statement -> input_statement .)
+    $end            reduce using rule 19 (statement -> input_statement .)
+    RBRACE          reduce using rule 19 (statement -> input_statement .)
+    ELSE            reduce using rule 19 (statement -> input_statement .)
+
+
+state 19
+
+    (20) statement -> block_statement .
+
+    IF              reduce using rule 20 (statement -> block_statement .)
+    WHILE           reduce using rule 20 (statement -> block_statement .)
+    FOR             reduce using rule 20 (statement -> block_statement .)
+    PRINT           reduce using rule 20 (statement -> block_statement .)
+    INPUT           reduce using rule 20 (statement -> block_statement .)
+    LBRACE          reduce using rule 20 (statement -> block_statement .)
+    ID              reduce using rule 20 (statement -> block_statement .)
+    $end            reduce using rule 20 (statement -> block_statement .)
+    RBRACE          reduce using rule 20 (statement -> block_statement .)
+    ELSE            reduce using rule 20 (statement -> block_statement .)
+
+
+state 20
+
+    (21) assignment_statement -> assignment . SEMICOLON
+
+    SEMICOLON       shift and go to state 32
+
+
+state 21
+
+    (29) if_statement -> IF . LPAREN condition RPAREN statement
+    (30) if_statement -> IF . LPAREN condition RPAREN statement ELSE statement
+
+    LPAREN          shift and go to state 33
+
+
+state 22
+
+    (31) while_statement -> WHILE . LPAREN condition RPAREN statement
+
+    LPAREN          shift and go to state 34
+
+
+state 23
+
+    (32) for_statement -> FOR . LPAREN assignment COLON condition COLON assignment RPAREN statement
+
+    LPAREN          shift and go to state 35
+
+
+state 24
+
+    (22) print_statement -> PRINT . LPAREN expression RPAREN SEMICOLON
+
+    LPAREN          shift and go to state 36
+
+
+state 25
+
+    (23) input_statement -> INPUT . LPAREN ID RPAREN SEMICOLON
+
+    LPAREN          shift and go to state 37
+
+
+state 26
+
+    (24) block_statement -> LBRACE . statements RBRACE
+    (25) block_statement -> LBRACE . RBRACE
+    (11) statements -> . statement_list
+    (12) statement_list -> . statement
+    (13) statement_list -> . statement statement_list
+    (14) statement -> . assignment_statement
+    (15) statement -> . if_statement
+    (16) statement -> . while_statement
+    (17) statement -> . for_statement
+    (18) statement -> . print_statement
+    (19) statement -> . input_statement
+    (20) statement -> . block_statement
+    (21) assignment_statement -> . assignment SEMICOLON
+    (29) if_statement -> . IF LPAREN condition RPAREN statement
+    (30) if_statement -> . IF LPAREN condition RPAREN statement ELSE statement
+    (31) while_statement -> . WHILE LPAREN condition RPAREN statement
+    (32) for_statement -> . FOR LPAREN assignment COLON condition COLON assignment RPAREN statement
+    (22) print_statement -> . PRINT LPAREN expression RPAREN SEMICOLON
+    (23) input_statement -> . INPUT LPAREN ID RPAREN SEMICOLON
+    (24) block_statement -> . LBRACE statements RBRACE
+    (25) block_statement -> . LBRACE RBRACE
+    (26) assignment -> . ID ASSIGN expression
+    (27) assignment -> . ID INCREMENT
+    (28) assignment -> . ID DECREMENT
+
+    RBRACE          shift and go to state 39
+    IF              shift and go to state 21
+    WHILE           shift and go to state 22
+    FOR             shift and go to state 23
+    PRINT           shift and go to state 24
+    INPUT           shift and go to state 25
+    LBRACE          shift and go to state 26
+    ID              shift and go to state 9
+
+    statements                     shift and go to state 38
+    statement_list                 shift and go to state 11
+    statement                      shift and go to state 12
+    assignment_statement           shift and go to state 13
+    if_statement                   shift and go to state 14
+    while_statement                shift and go to state 15
+    for_statement                  shift and go to state 16
+    print_statement                shift and go to state 17
+    input_statement                shift and go to state 18
+    block_statement                shift and go to state 19
+    assignment                     shift and go to state 20
+
+state 27
+
+    (3) declarations -> DECIDS COLON . vars_declarations
+    (5) vars_declarations -> . var_declaration
+    (6) vars_declarations -> . var_declaration vars_declarations
+    (7) var_declaration -> . ID COLON type SEMICOLON
+
+    ID              shift and go to state 42
+
+    vars_declarations              shift and go to state 40
+    var_declaration                shift and go to state 41
+
+state 28
+
+    (26) assignment -> ID ASSIGN . expression
+    (39) expression -> . term
+    (40) expression -> . expression PLUS term
+    (41) expression -> . expression MINUS term
+    (42) term -> . factor
+    (43) term -> . term TIMES factor
+    (44) term -> . term DIVIDE factor
+    (45) factor -> . ID
+    (46) factor -> . NUMBER
+    (47) factor -> . LPAREN expression RPAREN
+    (48) factor -> . MINUS factor
+
+    ID              shift and go to state 43
+    NUMBER          shift and go to state 48
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 46
+
+    expression                     shift and go to state 44
+    term                           shift and go to state 45
+    factor                         shift and go to state 47
+
+state 29
+
+    (27) assignment -> ID INCREMENT .
+
+    SEMICOLON       reduce using rule 27 (assignment -> ID INCREMENT .)
+    COLON           reduce using rule 27 (assignment -> ID INCREMENT .)
+    RPAREN          reduce using rule 27 (assignment -> ID INCREMENT .)
+
+
+state 30
+
+    (28) assignment -> ID DECREMENT .
+
+    SEMICOLON       reduce using rule 28 (assignment -> ID DECREMENT .)
+    COLON           reduce using rule 28 (assignment -> ID DECREMENT .)
+    RPAREN          reduce using rule 28 (assignment -> ID DECREMENT .)
+
+
+state 31
+
+    (13) statement_list -> statement statement_list .
+
+    $end            reduce using rule 13 (statement_list -> statement statement_list .)
+    RBRACE          reduce using rule 13 (statement_list -> statement statement_list .)
+
+
+state 32
+
+    (21) assignment_statement -> assignment SEMICOLON .
+
+    IF              reduce using rule 21 (assignment_statement -> assignment SEMICOLON .)
+    WHILE           reduce using rule 21 (assignment_statement -> assignment SEMICOLON .)
+    FOR             reduce using rule 21 (assignment_statement -> assignment SEMICOLON .)
+    PRINT           reduce using rule 21 (assignment_statement -> assignment SEMICOLON .)
+    INPUT           reduce using rule 21 (assignment_statement -> assignment SEMICOLON .)
+    LBRACE          reduce using rule 21 (assignment_statement -> assignment SEMICOLON .)
+    ID              reduce using rule 21 (assignment_statement -> assignment SEMICOLON .)
+    $end            reduce using rule 21 (assignment_statement -> assignment SEMICOLON .)
+    RBRACE          reduce using rule 21 (assignment_statement -> assignment SEMICOLON .)
+    ELSE            reduce using rule 21 (assignment_statement -> assignment SEMICOLON .)
+
+
+state 33
+
+    (29) if_statement -> IF LPAREN . condition RPAREN statement
+    (30) if_statement -> IF LPAREN . condition RPAREN statement ELSE statement
+    (33) condition -> . expression comparison expression
+    (34) condition -> . NOT condition
+    (39) expression -> . term
+    (40) expression -> . expression PLUS term
+    (41) expression -> . expression MINUS term
+    (42) term -> . factor
+    (43) term -> . term TIMES factor
+    (44) term -> . term DIVIDE factor
+    (45) factor -> . ID
+    (46) factor -> . NUMBER
+    (47) factor -> . LPAREN expression RPAREN
+    (48) factor -> . MINUS factor
+
+    NOT             shift and go to state 52
+    ID              shift and go to state 43
+    NUMBER          shift and go to state 48
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 46
+
+    condition                      shift and go to state 50
+    expression                     shift and go to state 51
+    term                           shift and go to state 45
+    factor                         shift and go to state 47
+
+state 34
+
+    (31) while_statement -> WHILE LPAREN . condition RPAREN statement
+    (33) condition -> . expression comparison expression
+    (34) condition -> . NOT condition
+    (39) expression -> . term
+    (40) expression -> . expression PLUS term
+    (41) expression -> . expression MINUS term
+    (42) term -> . factor
+    (43) term -> . term TIMES factor
+    (44) term -> . term DIVIDE factor
+    (45) factor -> . ID
+    (46) factor -> . NUMBER
+    (47) factor -> . LPAREN expression RPAREN
+    (48) factor -> . MINUS factor
+
+    NOT             shift and go to state 52
+    ID              shift and go to state 43
+    NUMBER          shift and go to state 48
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 46
+
+    condition                      shift and go to state 53
+    expression                     shift and go to state 51
+    term                           shift and go to state 45
+    factor                         shift and go to state 47
+
+state 35
+
+    (32) for_statement -> FOR LPAREN . assignment COLON condition COLON assignment RPAREN statement
+    (26) assignment -> . ID ASSIGN expression
+    (27) assignment -> . ID INCREMENT
+    (28) assignment -> . ID DECREMENT
+
+    ID              shift and go to state 9
+
+    assignment                     shift and go to state 54
+
+state 36
+
+    (22) print_statement -> PRINT LPAREN . expression RPAREN SEMICOLON
+    (39) expression -> . term
+    (40) expression -> . expression PLUS term
+    (41) expression -> . expression MINUS term
+    (42) term -> . factor
+    (43) term -> . term TIMES factor
+    (44) term -> . term DIVIDE factor
+    (45) factor -> . ID
+    (46) factor -> . NUMBER
+    (47) factor -> . LPAREN expression RPAREN
+    (48) factor -> . MINUS factor
+
+    ID              shift and go to state 43
+    NUMBER          shift and go to state 48
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 46
+
+    expression                     shift and go to state 55
+    term                           shift and go to state 45
+    factor                         shift and go to state 47
+
+state 37
+
+    (23) input_statement -> INPUT LPAREN . ID RPAREN SEMICOLON
+
+    ID              shift and go to state 56
+
+
+state 38
+
+    (24) block_statement -> LBRACE statements . RBRACE
+
+    RBRACE          shift and go to state 57
+
+
+state 39
+
+    (25) block_statement -> LBRACE RBRACE .
+
+    IF              reduce using rule 25 (block_statement -> LBRACE RBRACE .)
+    WHILE           reduce using rule 25 (block_statement -> LBRACE RBRACE .)
+    FOR             reduce using rule 25 (block_statement -> LBRACE RBRACE .)
+    PRINT           reduce using rule 25 (block_statement -> LBRACE RBRACE .)
+    INPUT           reduce using rule 25 (block_statement -> LBRACE RBRACE .)
+    LBRACE          reduce using rule 25 (block_statement -> LBRACE RBRACE .)
+    ID              reduce using rule 25 (block_statement -> LBRACE RBRACE .)
+    $end            reduce using rule 25 (block_statement -> LBRACE RBRACE .)
+    RBRACE          reduce using rule 25 (block_statement -> LBRACE RBRACE .)
+    ELSE            reduce using rule 25 (block_statement -> LBRACE RBRACE .)
+
+
+state 40
+
+    (3) declarations -> DECIDS COLON vars_declarations .
+
+    IF              reduce using rule 3 (declarations -> DECIDS COLON vars_declarations .)
+    WHILE           reduce using rule 3 (declarations -> DECIDS COLON vars_declarations .)
+    FOR             reduce using rule 3 (declarations -> DECIDS COLON vars_declarations .)
+    PRINT           reduce using rule 3 (declarations -> DECIDS COLON vars_declarations .)
+    INPUT           reduce using rule 3 (declarations -> DECIDS COLON vars_declarations .)
+    LBRACE          reduce using rule 3 (declarations -> DECIDS COLON vars_declarations .)
+    ID              reduce using rule 3 (declarations -> DECIDS COLON vars_declarations .)
+    $end            reduce using rule 3 (declarations -> DECIDS COLON vars_declarations .)
+
+
+state 41
+
+    (5) vars_declarations -> var_declaration .
+    (6) vars_declarations -> var_declaration . vars_declarations
+    (5) vars_declarations -> . var_declaration
+    (6) vars_declarations -> . var_declaration vars_declarations
+    (7) var_declaration -> . ID COLON type SEMICOLON
+
+  ! shift/reduce conflict for ID resolved as shift
+    IF              reduce using rule 5 (vars_declarations -> var_declaration .)
+    WHILE           reduce using rule 5 (vars_declarations -> var_declaration .)
+    FOR             reduce using rule 5 (vars_declarations -> var_declaration .)
+    PRINT           reduce using rule 5 (vars_declarations -> var_declaration .)
+    INPUT           reduce using rule 5 (vars_declarations -> var_declaration .)
+    LBRACE          reduce using rule 5 (vars_declarations -> var_declaration .)
+    $end            reduce using rule 5 (vars_declarations -> var_declaration .)
+    ID              shift and go to state 42
+
+  ! ID              [ reduce using rule 5 (vars_declarations -> var_declaration .) ]
+
+    var_declaration                shift and go to state 41
+    vars_declarations              shift and go to state 58
+
+state 42
+
+    (7) var_declaration -> ID . COLON type SEMICOLON
+
+    COLON           shift and go to state 59
+
+
+state 43
+
+    (45) factor -> ID .
+
+    TIMES           reduce using rule 45 (factor -> ID .)
+    DIVIDE          reduce using rule 45 (factor -> ID .)
+    PLUS            reduce using rule 45 (factor -> ID .)
+    MINUS           reduce using rule 45 (factor -> ID .)
+    SEMICOLON       reduce using rule 45 (factor -> ID .)
+    COLON           reduce using rule 45 (factor -> ID .)
+    RPAREN          reduce using rule 45 (factor -> ID .)
+    EQUALS          reduce using rule 45 (factor -> ID .)
+    NEQUALS         reduce using rule 45 (factor -> ID .)
+    GT              reduce using rule 45 (factor -> ID .)
+    LT              reduce using rule 45 (factor -> ID .)
+
+
+state 44
+
+    (26) assignment -> ID ASSIGN expression .
+    (40) expression -> expression . PLUS term
+    (41) expression -> expression . MINUS term
+
+    SEMICOLON       reduce using rule 26 (assignment -> ID ASSIGN expression .)
+    COLON           reduce using rule 26 (assignment -> ID ASSIGN expression .)
+    RPAREN          reduce using rule 26 (assignment -> ID ASSIGN expression .)
+    PLUS            shift and go to state 60
+    MINUS           shift and go to state 61
+
+
+state 45
+
+    (39) expression -> term .
+    (43) term -> term . TIMES factor
+    (44) term -> term . DIVIDE factor
+
+    PLUS            reduce using rule 39 (expression -> term .)
+    MINUS           reduce using rule 39 (expression -> term .)
+    SEMICOLON       reduce using rule 39 (expression -> term .)
+    COLON           reduce using rule 39 (expression -> term .)
+    RPAREN          reduce using rule 39 (expression -> term .)
+    EQUALS          reduce using rule 39 (expression -> term .)
+    NEQUALS         reduce using rule 39 (expression -> term .)
+    GT              reduce using rule 39 (expression -> term .)
+    LT              reduce using rule 39 (expression -> term .)
+    TIMES           shift and go to state 62
+    DIVIDE          shift and go to state 63
+
+
+state 46
+
+    (48) factor -> MINUS . factor
+    (45) factor -> . ID
+    (46) factor -> . NUMBER
+    (47) factor -> . LPAREN expression RPAREN
+    (48) factor -> . MINUS factor
+
+    ID              shift and go to state 43
+    NUMBER          shift and go to state 48
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 46
+
+    factor                         shift and go to state 64
+
+state 47
+
+    (42) term -> factor .
+
+    TIMES           reduce using rule 42 (term -> factor .)
+    DIVIDE          reduce using rule 42 (term -> factor .)
+    PLUS            reduce using rule 42 (term -> factor .)
+    MINUS           reduce using rule 42 (term -> factor .)
+    SEMICOLON       reduce using rule 42 (term -> factor .)
+    COLON           reduce using rule 42 (term -> factor .)
+    RPAREN          reduce using rule 42 (term -> factor .)
+    EQUALS          reduce using rule 42 (term -> factor .)
+    NEQUALS         reduce using rule 42 (term -> factor .)
+    GT              reduce using rule 42 (term -> factor .)
+    LT              reduce using rule 42 (term -> factor .)
+
+
+state 48
+
+    (46) factor -> NUMBER .
+
+    TIMES           reduce using rule 46 (factor -> NUMBER .)
+    DIVIDE          reduce using rule 46 (factor -> NUMBER .)
+    PLUS            reduce using rule 46 (factor -> NUMBER .)
+    MINUS           reduce using rule 46 (factor -> NUMBER .)
+    SEMICOLON       reduce using rule 46 (factor -> NUMBER .)
+    COLON           reduce using rule 46 (factor -> NUMBER .)
+    RPAREN          reduce using rule 46 (factor -> NUMBER .)
+    EQUALS          reduce using rule 46 (factor -> NUMBER .)
+    NEQUALS         reduce using rule 46 (factor -> NUMBER .)
+    GT              reduce using rule 46 (factor -> NUMBER .)
+    LT              reduce using rule 46 (factor -> NUMBER .)
+
+
+state 49
+
+    (47) factor -> LPAREN . expression RPAREN
+    (39) expression -> . term
+    (40) expression -> . expression PLUS term
+    (41) expression -> . expression MINUS term
+    (42) term -> . factor
+    (43) term -> . term TIMES factor
+    (44) term -> . term DIVIDE factor
+    (45) factor -> . ID
+    (46) factor -> . NUMBER
+    (47) factor -> . LPAREN expression RPAREN
+    (48) factor -> . MINUS factor
+
+    ID              shift and go to state 43
+    NUMBER          shift and go to state 48
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 46
+
+    expression                     shift and go to state 65
+    term                           shift and go to state 45
+    factor                         shift and go to state 47
+
+state 50
+
+    (29) if_statement -> IF LPAREN condition . RPAREN statement
+    (30) if_statement -> IF LPAREN condition . RPAREN statement ELSE statement
+
+    RPAREN          shift and go to state 66
+
+
+state 51
+
+    (33) condition -> expression . comparison expression
+    (40) expression -> expression . PLUS term
+    (41) expression -> expression . MINUS term
+    (35) comparison -> . EQUALS
+    (36) comparison -> . NEQUALS
+    (37) comparison -> . GT
+    (38) comparison -> . LT
+
+    PLUS            shift and go to state 60
+    MINUS           shift and go to state 61
+    EQUALS          shift and go to state 68
+    NEQUALS         shift and go to state 69
+    GT              shift and go to state 70
+    LT              shift and go to state 71
+
+    comparison                     shift and go to state 67
+
+state 52
+
+    (34) condition -> NOT . condition
+    (33) condition -> . expression comparison expression
+    (34) condition -> . NOT condition
+    (39) expression -> . term
+    (40) expression -> . expression PLUS term
+    (41) expression -> . expression MINUS term
+    (42) term -> . factor
+    (43) term -> . term TIMES factor
+    (44) term -> . term DIVIDE factor
+    (45) factor -> . ID
+    (46) factor -> . NUMBER
+    (47) factor -> . LPAREN expression RPAREN
+    (48) factor -> . MINUS factor
+
+    NOT             shift and go to state 52
+    ID              shift and go to state 43
+    NUMBER          shift and go to state 48
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 46
+
+    condition                      shift and go to state 72
+    expression                     shift and go to state 51
+    term                           shift and go to state 45
+    factor                         shift and go to state 47
+
+state 53
+
+    (31) while_statement -> WHILE LPAREN condition . RPAREN statement
+
+    RPAREN          shift and go to state 73
+
+
+state 54
+
+    (32) for_statement -> FOR LPAREN assignment . COLON condition COLON assignment RPAREN statement
+
+    COLON           shift and go to state 74
+
+
+state 55
+
+    (22) print_statement -> PRINT LPAREN expression . RPAREN SEMICOLON
+    (40) expression -> expression . PLUS term
+    (41) expression -> expression . MINUS term
+
+    RPAREN          shift and go to state 75
+    PLUS            shift and go to state 60
+    MINUS           shift and go to state 61
+
+
+state 56
+
+    (23) input_statement -> INPUT LPAREN ID . RPAREN SEMICOLON
+
+    RPAREN          shift and go to state 76
+
+
+state 57
+
+    (24) block_statement -> LBRACE statements RBRACE .
+
+    IF              reduce using rule 24 (block_statement -> LBRACE statements RBRACE .)
+    WHILE           reduce using rule 24 (block_statement -> LBRACE statements RBRACE .)
+    FOR             reduce using rule 24 (block_statement -> LBRACE statements RBRACE .)
+    PRINT           reduce using rule 24 (block_statement -> LBRACE statements RBRACE .)
+    INPUT           reduce using rule 24 (block_statement -> LBRACE statements RBRACE .)
+    LBRACE          reduce using rule 24 (block_statement -> LBRACE statements RBRACE .)
+    ID              reduce using rule 24 (block_statement -> LBRACE statements RBRACE .)
+    $end            reduce using rule 24 (block_statement -> LBRACE statements RBRACE .)
+    RBRACE          reduce using rule 24 (block_statement -> LBRACE statements RBRACE .)
+    ELSE            reduce using rule 24 (block_statement -> LBRACE statements RBRACE .)
+
+
+state 58
+
+    (6) vars_declarations -> var_declaration vars_declarations .
+
+    IF              reduce using rule 6 (vars_declarations -> var_declaration vars_declarations .)
+    WHILE           reduce using rule 6 (vars_declarations -> var_declaration vars_declarations .)
+    FOR             reduce using rule 6 (vars_declarations -> var_declaration vars_declarations .)
+    PRINT           reduce using rule 6 (vars_declarations -> var_declaration vars_declarations .)
+    INPUT           reduce using rule 6 (vars_declarations -> var_declaration vars_declarations .)
+    LBRACE          reduce using rule 6 (vars_declarations -> var_declaration vars_declarations .)
+    ID              reduce using rule 6 (vars_declarations -> var_declaration vars_declarations .)
+    $end            reduce using rule 6 (vars_declarations -> var_declaration vars_declarations .)
+
+
+state 59
+
+    (7) var_declaration -> ID COLON . type SEMICOLON
+    (8) type -> . INT
+    (9) type -> . FLOAT
+
+    INT             shift and go to state 78
+    FLOAT           shift and go to state 79
+
+    type                           shift and go to state 77
+
+state 60
+
+    (40) expression -> expression PLUS . term
+    (42) term -> . factor
+    (43) term -> . term TIMES factor
+    (44) term -> . term DIVIDE factor
+    (45) factor -> . ID
+    (46) factor -> . NUMBER
+    (47) factor -> . LPAREN expression RPAREN
+    (48) factor -> . MINUS factor
+
+    ID              shift and go to state 43
+    NUMBER          shift and go to state 48
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 46
+
+    term                           shift and go to state 80
+    factor                         shift and go to state 47
+
+state 61
+
+    (41) expression -> expression MINUS . term
+    (42) term -> . factor
+    (43) term -> . term TIMES factor
+    (44) term -> . term DIVIDE factor
+    (45) factor -> . ID
+    (46) factor -> . NUMBER
+    (47) factor -> . LPAREN expression RPAREN
+    (48) factor -> . MINUS factor
+
+    ID              shift and go to state 43
+    NUMBER          shift and go to state 48
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 46
+
+    term                           shift and go to state 81
+    factor                         shift and go to state 47
+
+state 62
+
+    (43) term -> term TIMES . factor
+    (45) factor -> . ID
+    (46) factor -> . NUMBER
+    (47) factor -> . LPAREN expression RPAREN
+    (48) factor -> . MINUS factor
+
+    ID              shift and go to state 43
+    NUMBER          shift and go to state 48
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 46
+
+    factor                         shift and go to state 82
+
+state 63
+
+    (44) term -> term DIVIDE . factor
+    (45) factor -> . ID
+    (46) factor -> . NUMBER
+    (47) factor -> . LPAREN expression RPAREN
+    (48) factor -> . MINUS factor
+
+    ID              shift and go to state 43
+    NUMBER          shift and go to state 48
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 46
+
+    factor                         shift and go to state 83
+
+state 64
+
+    (48) factor -> MINUS factor .
+
+    TIMES           reduce using rule 48 (factor -> MINUS factor .)
+    DIVIDE          reduce using rule 48 (factor -> MINUS factor .)
+    PLUS            reduce using rule 48 (factor -> MINUS factor .)
+    MINUS           reduce using rule 48 (factor -> MINUS factor .)
+    SEMICOLON       reduce using rule 48 (factor -> MINUS factor .)
+    COLON           reduce using rule 48 (factor -> MINUS factor .)
+    RPAREN          reduce using rule 48 (factor -> MINUS factor .)
+    EQUALS          reduce using rule 48 (factor -> MINUS factor .)
+    NEQUALS         reduce using rule 48 (factor -> MINUS factor .)
+    GT              reduce using rule 48 (factor -> MINUS factor .)
+    LT              reduce using rule 48 (factor -> MINUS factor .)
+
+
+state 65
+
+    (47) factor -> LPAREN expression . RPAREN
+    (40) expression -> expression . PLUS term
+    (41) expression -> expression . MINUS term
+
+    RPAREN          shift and go to state 84
+    PLUS            shift and go to state 60
+    MINUS           shift and go to state 61
+
+
+state 66
+
+    (29) if_statement -> IF LPAREN condition RPAREN . statement
+    (30) if_statement -> IF LPAREN condition RPAREN . statement ELSE statement
+    (14) statement -> . assignment_statement
+    (15) statement -> . if_statement
+    (16) statement -> . while_statement
+    (17) statement -> . for_statement
+    (18) statement -> . print_statement
+    (19) statement -> . input_statement
+    (20) statement -> . block_statement
+    (21) assignment_statement -> . assignment SEMICOLON
+    (29) if_statement -> . IF LPAREN condition RPAREN statement
+    (30) if_statement -> . IF LPAREN condition RPAREN statement ELSE statement
+    (31) while_statement -> . WHILE LPAREN condition RPAREN statement
+    (32) for_statement -> . FOR LPAREN assignment COLON condition COLON assignment RPAREN statement
+    (22) print_statement -> . PRINT LPAREN expression RPAREN SEMICOLON
+    (23) input_statement -> . INPUT LPAREN ID RPAREN SEMICOLON
+    (24) block_statement -> . LBRACE statements RBRACE
+    (25) block_statement -> . LBRACE RBRACE
+    (26) assignment -> . ID ASSIGN expression
+    (27) assignment -> . ID INCREMENT
+    (28) assignment -> . ID DECREMENT
+
+    IF              shift and go to state 21
+    WHILE           shift and go to state 22
+    FOR             shift and go to state 23
+    PRINT           shift and go to state 24
+    INPUT           shift and go to state 25
+    LBRACE          shift and go to state 26
+    ID              shift and go to state 9
+
+    statement                      shift and go to state 85
+    assignment_statement           shift and go to state 13
+    if_statement                   shift and go to state 14
+    while_statement                shift and go to state 15
+    for_statement                  shift and go to state 16
+    print_statement                shift and go to state 17
+    input_statement                shift and go to state 18
+    block_statement                shift and go to state 19
+    assignment                     shift and go to state 20
+
+state 67
+
+    (33) condition -> expression comparison . expression
+    (39) expression -> . term
+    (40) expression -> . expression PLUS term
+    (41) expression -> . expression MINUS term
+    (42) term -> . factor
+    (43) term -> . term TIMES factor
+    (44) term -> . term DIVIDE factor
+    (45) factor -> . ID
+    (46) factor -> . NUMBER
+    (47) factor -> . LPAREN expression RPAREN
+    (48) factor -> . MINUS factor
+
+    ID              shift and go to state 43
+    NUMBER          shift and go to state 48
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 46
+
+    expression                     shift and go to state 86
+    term                           shift and go to state 45
+    factor                         shift and go to state 47
+
+state 68
+
+    (35) comparison -> EQUALS .
+
+    ID              reduce using rule 35 (comparison -> EQUALS .)
+    NUMBER          reduce using rule 35 (comparison -> EQUALS .)
+    LPAREN          reduce using rule 35 (comparison -> EQUALS .)
+    MINUS           reduce using rule 35 (comparison -> EQUALS .)
+
+
+state 69
+
+    (36) comparison -> NEQUALS .
+
+    ID              reduce using rule 36 (comparison -> NEQUALS .)
+    NUMBER          reduce using rule 36 (comparison -> NEQUALS .)
+    LPAREN          reduce using rule 36 (comparison -> NEQUALS .)
+    MINUS           reduce using rule 36 (comparison -> NEQUALS .)
+
+
+state 70
+
+    (37) comparison -> GT .
+
+    ID              reduce using rule 37 (comparison -> GT .)
+    NUMBER          reduce using rule 37 (comparison -> GT .)
+    LPAREN          reduce using rule 37 (comparison -> GT .)
+    MINUS           reduce using rule 37 (comparison -> GT .)
+
+
+state 71
+
+    (38) comparison -> LT .
+
+    ID              reduce using rule 38 (comparison -> LT .)
+    NUMBER          reduce using rule 38 (comparison -> LT .)
+    LPAREN          reduce using rule 38 (comparison -> LT .)
+    MINUS           reduce using rule 38 (comparison -> LT .)
+
+
+state 72
+
+    (34) condition -> NOT condition .
+
+    RPAREN          reduce using rule 34 (condition -> NOT condition .)
+    COLON           reduce using rule 34 (condition -> NOT condition .)
+
+
+state 73
+
+    (31) while_statement -> WHILE LPAREN condition RPAREN . statement
+    (14) statement -> . assignment_statement
+    (15) statement -> . if_statement
+    (16) statement -> . while_statement
+    (17) statement -> . for_statement
+    (18) statement -> . print_statement
+    (19) statement -> . input_statement
+    (20) statement -> . block_statement
+    (21) assignment_statement -> . assignment SEMICOLON
+    (29) if_statement -> . IF LPAREN condition RPAREN statement
+    (30) if_statement -> . IF LPAREN condition RPAREN statement ELSE statement
+    (31) while_statement -> . WHILE LPAREN condition RPAREN statement
+    (32) for_statement -> . FOR LPAREN assignment COLON condition COLON assignment RPAREN statement
+    (22) print_statement -> . PRINT LPAREN expression RPAREN SEMICOLON
+    (23) input_statement -> . INPUT LPAREN ID RPAREN SEMICOLON
+    (24) block_statement -> . LBRACE statements RBRACE
+    (25) block_statement -> . LBRACE RBRACE
+    (26) assignment -> . ID ASSIGN expression
+    (27) assignment -> . ID INCREMENT
+    (28) assignment -> . ID DECREMENT
+
+    IF              shift and go to state 21
+    WHILE           shift and go to state 22
+    FOR             shift and go to state 23
+    PRINT           shift and go to state 24
+    INPUT           shift and go to state 25
+    LBRACE          shift and go to state 26
+    ID              shift and go to state 9
+
+    statement                      shift and go to state 87
+    assignment_statement           shift and go to state 13
+    if_statement                   shift and go to state 14
+    while_statement                shift and go to state 15
+    for_statement                  shift and go to state 16
+    print_statement                shift and go to state 17
+    input_statement                shift and go to state 18
+    block_statement                shift and go to state 19
+    assignment                     shift and go to state 20
+
+state 74
+
+    (32) for_statement -> FOR LPAREN assignment COLON . condition COLON assignment RPAREN statement
+    (33) condition -> . expression comparison expression
+    (34) condition -> . NOT condition
+    (39) expression -> . term
+    (40) expression -> . expression PLUS term
+    (41) expression -> . expression MINUS term
+    (42) term -> . factor
+    (43) term -> . term TIMES factor
+    (44) term -> . term DIVIDE factor
+    (45) factor -> . ID
+    (46) factor -> . NUMBER
+    (47) factor -> . LPAREN expression RPAREN
+    (48) factor -> . MINUS factor
+
+    NOT             shift and go to state 52
+    ID              shift and go to state 43
+    NUMBER          shift and go to state 48
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 46
+
+    condition                      shift and go to state 88
+    expression                     shift and go to state 51
+    term                           shift and go to state 45
+    factor                         shift and go to state 47
+
+state 75
+
+    (22) print_statement -> PRINT LPAREN expression RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 89
+
+
+state 76
+
+    (23) input_statement -> INPUT LPAREN ID RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 90
+
+
+state 77
+
+    (7) var_declaration -> ID COLON type . SEMICOLON
+
+    SEMICOLON       shift and go to state 91
+
+
+state 78
+
+    (8) type -> INT .
+
+    SEMICOLON       reduce using rule 8 (type -> INT .)
+
+
+state 79
+
+    (9) type -> FLOAT .
+
+    SEMICOLON       reduce using rule 9 (type -> FLOAT .)
+
+
+state 80
+
+    (40) expression -> expression PLUS term .
+    (43) term -> term . TIMES factor
+    (44) term -> term . DIVIDE factor
+
+    PLUS            reduce using rule 40 (expression -> expression PLUS term .)
+    MINUS           reduce using rule 40 (expression -> expression PLUS term .)
+    SEMICOLON       reduce using rule 40 (expression -> expression PLUS term .)
+    COLON           reduce using rule 40 (expression -> expression PLUS term .)
+    RPAREN          reduce using rule 40 (expression -> expression PLUS term .)
+    EQUALS          reduce using rule 40 (expression -> expression PLUS term .)
+    NEQUALS         reduce using rule 40 (expression -> expression PLUS term .)
+    GT              reduce using rule 40 (expression -> expression PLUS term .)
+    LT              reduce using rule 40 (expression -> expression PLUS term .)
+    TIMES           shift and go to state 62
+    DIVIDE          shift and go to state 63
+
+
+state 81
+
+    (41) expression -> expression MINUS term .
+    (43) term -> term . TIMES factor
+    (44) term -> term . DIVIDE factor
+
+    PLUS            reduce using rule 41 (expression -> expression MINUS term .)
+    MINUS           reduce using rule 41 (expression -> expression MINUS term .)
+    SEMICOLON       reduce using rule 41 (expression -> expression MINUS term .)
+    COLON           reduce using rule 41 (expression -> expression MINUS term .)
+    RPAREN          reduce using rule 41 (expression -> expression MINUS term .)
+    EQUALS          reduce using rule 41 (expression -> expression MINUS term .)
+    NEQUALS         reduce using rule 41 (expression -> expression MINUS term .)
+    GT              reduce using rule 41 (expression -> expression MINUS term .)
+    LT              reduce using rule 41 (expression -> expression MINUS term .)
+    TIMES           shift and go to state 62
+    DIVIDE          shift and go to state 63
+
+
+state 82
+
+    (43) term -> term TIMES factor .
+
+    TIMES           reduce using rule 43 (term -> term TIMES factor .)
+    DIVIDE          reduce using rule 43 (term -> term TIMES factor .)
+    PLUS            reduce using rule 43 (term -> term TIMES factor .)
+    MINUS           reduce using rule 43 (term -> term TIMES factor .)
+    SEMICOLON       reduce using rule 43 (term -> term TIMES factor .)
+    COLON           reduce using rule 43 (term -> term TIMES factor .)
+    RPAREN          reduce using rule 43 (term -> term TIMES factor .)
+    EQUALS          reduce using rule 43 (term -> term TIMES factor .)
+    NEQUALS         reduce using rule 43 (term -> term TIMES factor .)
+    GT              reduce using rule 43 (term -> term TIMES factor .)
+    LT              reduce using rule 43 (term -> term TIMES factor .)
+
+
+state 83
+
+    (44) term -> term DIVIDE factor .
+
+    TIMES           reduce using rule 44 (term -> term DIVIDE factor .)
+    DIVIDE          reduce using rule 44 (term -> term DIVIDE factor .)
+    PLUS            reduce using rule 44 (term -> term DIVIDE factor .)
+    MINUS           reduce using rule 44 (term -> term DIVIDE factor .)
+    SEMICOLON       reduce using rule 44 (term -> term DIVIDE factor .)
+    COLON           reduce using rule 44 (term -> term DIVIDE factor .)
+    RPAREN          reduce using rule 44 (term -> term DIVIDE factor .)
+    EQUALS          reduce using rule 44 (term -> term DIVIDE factor .)
+    NEQUALS         reduce using rule 44 (term -> term DIVIDE factor .)
+    GT              reduce using rule 44 (term -> term DIVIDE factor .)
+    LT              reduce using rule 44 (term -> term DIVIDE factor .)
+
+
+state 84
+
+    (47) factor -> LPAREN expression RPAREN .
+
+    TIMES           reduce using rule 47 (factor -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 47 (factor -> LPAREN expression RPAREN .)
+    PLUS            reduce using rule 47 (factor -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 47 (factor -> LPAREN expression RPAREN .)
+    SEMICOLON       reduce using rule 47 (factor -> LPAREN expression RPAREN .)
+    COLON           reduce using rule 47 (factor -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 47 (factor -> LPAREN expression RPAREN .)
+    EQUALS          reduce using rule 47 (factor -> LPAREN expression RPAREN .)
+    NEQUALS         reduce using rule 47 (factor -> LPAREN expression RPAREN .)
+    GT              reduce using rule 47 (factor -> LPAREN expression RPAREN .)
+    LT              reduce using rule 47 (factor -> LPAREN expression RPAREN .)
+
+
+state 85
+
+    (29) if_statement -> IF LPAREN condition RPAREN statement .
+    (30) if_statement -> IF LPAREN condition RPAREN statement . ELSE statement
+
+  ! shift/reduce conflict for ELSE resolved as shift
+    IF              reduce using rule 29 (if_statement -> IF LPAREN condition RPAREN statement .)
+    WHILE           reduce using rule 29 (if_statement -> IF LPAREN condition RPAREN statement .)
+    FOR             reduce using rule 29 (if_statement -> IF LPAREN condition RPAREN statement .)
+    PRINT           reduce using rule 29 (if_statement -> IF LPAREN condition RPAREN statement .)
+    INPUT           reduce using rule 29 (if_statement -> IF LPAREN condition RPAREN statement .)
+    LBRACE          reduce using rule 29 (if_statement -> IF LPAREN condition RPAREN statement .)
+    ID              reduce using rule 29 (if_statement -> IF LPAREN condition RPAREN statement .)
+    $end            reduce using rule 29 (if_statement -> IF LPAREN condition RPAREN statement .)
+    RBRACE          reduce using rule 29 (if_statement -> IF LPAREN condition RPAREN statement .)
+    ELSE            shift and go to state 92
+
+  ! ELSE            [ reduce using rule 29 (if_statement -> IF LPAREN condition RPAREN statement .) ]
+
+
+state 86
+
+    (33) condition -> expression comparison expression .
+    (40) expression -> expression . PLUS term
+    (41) expression -> expression . MINUS term
+
+    RPAREN          reduce using rule 33 (condition -> expression comparison expression .)
+    COLON           reduce using rule 33 (condition -> expression comparison expression .)
+    PLUS            shift and go to state 60
+    MINUS           shift and go to state 61
+
+
+state 87
+
+    (31) while_statement -> WHILE LPAREN condition RPAREN statement .
+
+    IF              reduce using rule 31 (while_statement -> WHILE LPAREN condition RPAREN statement .)
+    WHILE           reduce using rule 31 (while_statement -> WHILE LPAREN condition RPAREN statement .)
+    FOR             reduce using rule 31 (while_statement -> WHILE LPAREN condition RPAREN statement .)
+    PRINT           reduce using rule 31 (while_statement -> WHILE LPAREN condition RPAREN statement .)
+    INPUT           reduce using rule 31 (while_statement -> WHILE LPAREN condition RPAREN statement .)
+    LBRACE          reduce using rule 31 (while_statement -> WHILE LPAREN condition RPAREN statement .)
+    ID              reduce using rule 31 (while_statement -> WHILE LPAREN condition RPAREN statement .)
+    $end            reduce using rule 31 (while_statement -> WHILE LPAREN condition RPAREN statement .)
+    RBRACE          reduce using rule 31 (while_statement -> WHILE LPAREN condition RPAREN statement .)
+    ELSE            reduce using rule 31 (while_statement -> WHILE LPAREN condition RPAREN statement .)
+
+
+state 88
+
+    (32) for_statement -> FOR LPAREN assignment COLON condition . COLON assignment RPAREN statement
+
+    COLON           shift and go to state 93
+
+
+state 89
+
+    (22) print_statement -> PRINT LPAREN expression RPAREN SEMICOLON .
+
+    IF              reduce using rule 22 (print_statement -> PRINT LPAREN expression RPAREN SEMICOLON .)
+    WHILE           reduce using rule 22 (print_statement -> PRINT LPAREN expression RPAREN SEMICOLON .)
+    FOR             reduce using rule 22 (print_statement -> PRINT LPAREN expression RPAREN SEMICOLON .)
+    PRINT           reduce using rule 22 (print_statement -> PRINT LPAREN expression RPAREN SEMICOLON .)
+    INPUT           reduce using rule 22 (print_statement -> PRINT LPAREN expression RPAREN SEMICOLON .)
+    LBRACE          reduce using rule 22 (print_statement -> PRINT LPAREN expression RPAREN SEMICOLON .)
+    ID              reduce using rule 22 (print_statement -> PRINT LPAREN expression RPAREN SEMICOLON .)
+    $end            reduce using rule 22 (print_statement -> PRINT LPAREN expression RPAREN SEMICOLON .)
+    RBRACE          reduce using rule 22 (print_statement -> PRINT LPAREN expression RPAREN SEMICOLON .)
+    ELSE            reduce using rule 22 (print_statement -> PRINT LPAREN expression RPAREN SEMICOLON .)
+
+
+state 90
+
+    (23) input_statement -> INPUT LPAREN ID RPAREN SEMICOLON .
+
+    IF              reduce using rule 23 (input_statement -> INPUT LPAREN ID RPAREN SEMICOLON .)
+    WHILE           reduce using rule 23 (input_statement -> INPUT LPAREN ID RPAREN SEMICOLON .)
+    FOR             reduce using rule 23 (input_statement -> INPUT LPAREN ID RPAREN SEMICOLON .)
+    PRINT           reduce using rule 23 (input_statement -> INPUT LPAREN ID RPAREN SEMICOLON .)
+    INPUT           reduce using rule 23 (input_statement -> INPUT LPAREN ID RPAREN SEMICOLON .)
+    LBRACE          reduce using rule 23 (input_statement -> INPUT LPAREN ID RPAREN SEMICOLON .)
+    ID              reduce using rule 23 (input_statement -> INPUT LPAREN ID RPAREN SEMICOLON .)
+    $end            reduce using rule 23 (input_statement -> INPUT LPAREN ID RPAREN SEMICOLON .)
+    RBRACE          reduce using rule 23 (input_statement -> INPUT LPAREN ID RPAREN SEMICOLON .)
+    ELSE            reduce using rule 23 (input_statement -> INPUT LPAREN ID RPAREN SEMICOLON .)
+
+
+state 91
+
+    (7) var_declaration -> ID COLON type SEMICOLON .
+
+    ID              reduce using rule 7 (var_declaration -> ID COLON type SEMICOLON .)
+    IF              reduce using rule 7 (var_declaration -> ID COLON type SEMICOLON .)
+    WHILE           reduce using rule 7 (var_declaration -> ID COLON type SEMICOLON .)
+    FOR             reduce using rule 7 (var_declaration -> ID COLON type SEMICOLON .)
+    PRINT           reduce using rule 7 (var_declaration -> ID COLON type SEMICOLON .)
+    INPUT           reduce using rule 7 (var_declaration -> ID COLON type SEMICOLON .)
+    LBRACE          reduce using rule 7 (var_declaration -> ID COLON type SEMICOLON .)
+    $end            reduce using rule 7 (var_declaration -> ID COLON type SEMICOLON .)
+
+
+state 92
+
+    (30) if_statement -> IF LPAREN condition RPAREN statement ELSE . statement
+    (14) statement -> . assignment_statement
+    (15) statement -> . if_statement
+    (16) statement -> . while_statement
+    (17) statement -> . for_statement
+    (18) statement -> . print_statement
+    (19) statement -> . input_statement
+    (20) statement -> . block_statement
+    (21) assignment_statement -> . assignment SEMICOLON
+    (29) if_statement -> . IF LPAREN condition RPAREN statement
+    (30) if_statement -> . IF LPAREN condition RPAREN statement ELSE statement
+    (31) while_statement -> . WHILE LPAREN condition RPAREN statement
+    (32) for_statement -> . FOR LPAREN assignment COLON condition COLON assignment RPAREN statement
+    (22) print_statement -> . PRINT LPAREN expression RPAREN SEMICOLON
+    (23) input_statement -> . INPUT LPAREN ID RPAREN SEMICOLON
+    (24) block_statement -> . LBRACE statements RBRACE
+    (25) block_statement -> . LBRACE RBRACE
+    (26) assignment -> . ID ASSIGN expression
+    (27) assignment -> . ID INCREMENT
+    (28) assignment -> . ID DECREMENT
+
+    IF              shift and go to state 21
+    WHILE           shift and go to state 22
+    FOR             shift and go to state 23
+    PRINT           shift and go to state 24
+    INPUT           shift and go to state 25
+    LBRACE          shift and go to state 26
+    ID              shift and go to state 9
+
+    statement                      shift and go to state 94
+    assignment_statement           shift and go to state 13
+    if_statement                   shift and go to state 14
+    while_statement                shift and go to state 15
+    for_statement                  shift and go to state 16
+    print_statement                shift and go to state 17
+    input_statement                shift and go to state 18
+    block_statement                shift and go to state 19
+    assignment                     shift and go to state 20
+
+state 93
+
+    (32) for_statement -> FOR LPAREN assignment COLON condition COLON . assignment RPAREN statement
+    (26) assignment -> . ID ASSIGN expression
+    (27) assignment -> . ID INCREMENT
+    (28) assignment -> . ID DECREMENT
+
+    ID              shift and go to state 9
+
+    assignment                     shift and go to state 95
+
+state 94
+
+    (30) if_statement -> IF LPAREN condition RPAREN statement ELSE statement .
+
+    IF              reduce using rule 30 (if_statement -> IF LPAREN condition RPAREN statement ELSE statement .)
+    WHILE           reduce using rule 30 (if_statement -> IF LPAREN condition RPAREN statement ELSE statement .)
+    FOR             reduce using rule 30 (if_statement -> IF LPAREN condition RPAREN statement ELSE statement .)
+    PRINT           reduce using rule 30 (if_statement -> IF LPAREN condition RPAREN statement ELSE statement .)
+    INPUT           reduce using rule 30 (if_statement -> IF LPAREN condition RPAREN statement ELSE statement .)
+    LBRACE          reduce using rule 30 (if_statement -> IF LPAREN condition RPAREN statement ELSE statement .)
+    ID              reduce using rule 30 (if_statement -> IF LPAREN condition RPAREN statement ELSE statement .)
+    $end            reduce using rule 30 (if_statement -> IF LPAREN condition RPAREN statement ELSE statement .)
+    RBRACE          reduce using rule 30 (if_statement -> IF LPAREN condition RPAREN statement ELSE statement .)
+    ELSE            reduce using rule 30 (if_statement -> IF LPAREN condition RPAREN statement ELSE statement .)
+
+
+state 95
+
+    (32) for_statement -> FOR LPAREN assignment COLON condition COLON assignment . RPAREN statement
+
+    RPAREN          shift and go to state 96
+
+
+state 96
+
+    (32) for_statement -> FOR LPAREN assignment COLON condition COLON assignment RPAREN . statement
+    (14) statement -> . assignment_statement
+    (15) statement -> . if_statement
+    (16) statement -> . while_statement
+    (17) statement -> . for_statement
+    (18) statement -> . print_statement
+    (19) statement -> . input_statement
+    (20) statement -> . block_statement
+    (21) assignment_statement -> . assignment SEMICOLON
+    (29) if_statement -> . IF LPAREN condition RPAREN statement
+    (30) if_statement -> . IF LPAREN condition RPAREN statement ELSE statement
+    (31) while_statement -> . WHILE LPAREN condition RPAREN statement
+    (32) for_statement -> . FOR LPAREN assignment COLON condition COLON assignment RPAREN statement
+    (22) print_statement -> . PRINT LPAREN expression RPAREN SEMICOLON
+    (23) input_statement -> . INPUT LPAREN ID RPAREN SEMICOLON
+    (24) block_statement -> . LBRACE statements RBRACE
+    (25) block_statement -> . LBRACE RBRACE
+    (26) assignment -> . ID ASSIGN expression
+    (27) assignment -> . ID INCREMENT
+    (28) assignment -> . ID DECREMENT
+
+    IF              shift and go to state 21
+    WHILE           shift and go to state 22
+    FOR             shift and go to state 23
+    PRINT           shift and go to state 24
+    INPUT           shift and go to state 25
+    LBRACE          shift and go to state 26
+    ID              shift and go to state 9
+
+    assignment                     shift and go to state 20
+    statement                      shift and go to state 97
+    assignment_statement           shift and go to state 13
+    if_statement                   shift and go to state 14
+    while_statement                shift and go to state 15
+    for_statement                  shift and go to state 16
+    print_statement                shift and go to state 17
+    input_statement                shift and go to state 18
+    block_statement                shift and go to state 19
+
+state 97
+
+    (32) for_statement -> FOR LPAREN assignment COLON condition COLON assignment RPAREN statement .
+
+    IF              reduce using rule 32 (for_statement -> FOR LPAREN assignment COLON condition COLON assignment RPAREN statement .)
+    WHILE           reduce using rule 32 (for_statement -> FOR LPAREN assignment COLON condition COLON assignment RPAREN statement .)
+    FOR             reduce using rule 32 (for_statement -> FOR LPAREN assignment COLON condition COLON assignment RPAREN statement .)
+    PRINT           reduce using rule 32 (for_statement -> FOR LPAREN assignment COLON condition COLON assignment RPAREN statement .)
+    INPUT           reduce using rule 32 (for_statement -> FOR LPAREN assignment COLON condition COLON assignment RPAREN statement .)
+    LBRACE          reduce using rule 32 (for_statement -> FOR LPAREN assignment COLON condition COLON assignment RPAREN statement .)
+    ID              reduce using rule 32 (for_statement -> FOR LPAREN assignment COLON condition COLON assignment RPAREN statement .)
+    $end            reduce using rule 32 (for_statement -> FOR LPAREN assignment COLON condition COLON assignment RPAREN statement .)
+    RBRACE          reduce using rule 32 (for_statement -> FOR LPAREN assignment COLON condition COLON assignment RPAREN statement .)
+    ELSE            reduce using rule 32 (for_statement -> FOR LPAREN assignment COLON condition COLON assignment RPAREN statement .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for ID in state 41 resolved as shift
+WARNING: shift/reduce conflict for ELSE in state 85 resolved as shift
