@@ -14,7 +14,12 @@ varsDeclarations
     ;
 
 varDeclaration
-    : ID ':' type ';'
+    : listIDs ':' type ';'
+    ;
+
+listIDs
+    : listIDs, ID
+    | ID
     ;
 
 type
@@ -96,6 +101,23 @@ factor
     | '(' expression ')'             
     | NUMBER
     | ID
+    ;
+
+method
+    : returnType ID (params) methodBody
+    ;
+
+params
+    : params, type paramID
+    | type paramID
+    | // vazio
+    ;
+
+methodBody
+    : { statements returnStatement}
+
+returnStatement
+    : return ID;
     ;
 
 // Tokens
