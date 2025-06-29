@@ -55,7 +55,7 @@ whileStatement
     ;
 
 forStatement
-    : 'for' '(' assignment ';' condition ';' assignment ')' statement
+    : 'for' '(' assignment ':' condition ':' assignment ')' statement
     ;
 
 printStatement
@@ -92,8 +92,8 @@ term
     ;
 
 factor
-    : '-' factor                     
-    | '(' expression ')'             
+    : '-' factor                     # unaryMinus
+    | '(' expression ')'             # nestedExpr
     | NUMBER
     | ID
     ;
@@ -102,4 +102,4 @@ factor
 ID      : [a-zA-Z_][a-zA-Z_0-9]* ;
 NUMBER  : [0-9]+ ('.' [0-9]+)? ;
 WS      : [ \t\r\n]+ -> skip ;
-COMMENT : '//' ~[\r\n]* -> skip ;
+COMMENT : '//' ~[\r\n]* -> skip ;
