@@ -1,0 +1,161 @@
+program
+    : PROGRAM COLON ID SEMICOLON declarations methods_list main_method end_program
+    ;
+
+declarations
+    : DECIDS COLON vars_and_consts_declarations
+    | empty
+    ;
+
+vars_and_consts_declarations
+    : var_or_const_declaration+
+    ;
+
+var_or_const_declaration
+    : ID (COMMA ID)* COLON type SEMICOLON
+    | ID ASSIGN expression SEMICOLON (COMMA ID ASSIGN expression SEMICOLON)*
+    ;
+
+type
+    : INT
+    | FLOAT
+    | BOOL
+    | STR
+    ;
+
+methods_list
+    : method_declaration*
+    ;
+
+method_declaration
+    : type_or_void ID LPAREN parameters_list RPAREN LBRACE statements RBRACE
+    ;
+
+type_or_void
+    : type
+    | VOID
+    ;
+
+parameters_list
+    : parameter (COMMA parameter)*
+    | empty
+    ;
+
+parameter
+    : type ID
+    ;
+
+main_method
+    : MAIN COLON statements end_program
+    ;
+
+end_program
+    : END
+    ;
+
+statements
+    : statement+
+    ;
+
+statement
+    : assignment_statement
+    | if_statement
+    | while_statement
+    | for_statement
+    | print_statement
+    | input_statement
+    | return_statement
+    | block_statement
+    ;
+
+assignment_statement
+    : assignment SEMICOLON
+    ;
+
+assignment
+    : ID ASSIGN expression
+    | ID INCREMENT
+    | ID DECREMENT
+    ;
+
+if_statement
+    : IF LPAREN condition RPAREN block_statement (ELSE block_statement)?
+    ;
+
+while_statement
+    : WHILE LPAREN condition RPAREN block_statement
+    ;
+
+for_statement
+    : FOR LPAREN assignment_statement condition SEMICOLON assignment RPAREN block_statement
+    ;
+
+print_statement
+    : PRINT LPAREN expression_list RPAREN SEMICOLON
+    ;
+
+expression_list
+    : expression (COMMA expression)*
+    ;
+
+input_statement
+    : INPUT LPAREN variable_list RPAREN SEMICOLON
+    ;
+
+variable_list
+    : ID (COMMA ID)*
+    ;
+
+return_statement
+    : RETURN expression SEMICOLON
+    ;
+
+block_statement
+    : LBRACE declarations? statements? RBRACE
+    ;
+
+condition
+    : expression comparison expression
+    | NOT expression
+    ;
+
+comparison
+    : EQUALS
+    | NEQUALS
+    | GT
+    | LT
+    ;
+
+expression
+    : expression PLUS term
+    | expression MINUS term
+    | term
+    ;
+
+term
+    : term TIMES factor
+    | term DIVIDE factor
+    | factor
+    ;
+
+factor
+    : MINUS factor
+    | LPAREN expression RPAREN
+    | ID
+    | NUMBER
+    | STRING_LITERAL
+    | BOOLEAN_LITERAL
+    | function_call
+    ;
+
+function_call
+    : ID LPAREN expression_list RPAREN
+    ;
+
+// Tokens (adicionais ou corrigidos)
+ID : [a-zA-Z_][a-zA-Z_0-9]*
+NUMBER : \d*\.?\d+
+STRING_LITERAL : "([^"\\]|\\.)*"
+BOOLEAN_LITERAL : 'true' | 'false'
+COMMENT : '//' .*
+WS : [ \t\n]+

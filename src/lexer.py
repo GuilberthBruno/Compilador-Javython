@@ -133,30 +133,3 @@ def tokenize(data):
         tokens_list.append(tok)
     return tokens_list
 
-# Função principal para teste
-if __name__ == "__main__":
-    test_code = """
-    program: TesteMetodos;
-    decIds:
-        a: int;
-        b: int;
-    int soma(int x, int y) {
-        return x + y;
-    }
-    void imprimeSoma(int valor) {
-        print("Soma calculada:", valor);
-    }
-    main:
-        a = 3;
-        b = 7;
-        resultado = soma(a, b);
-        imprimeSoma(resultado);
-    end
-    """
-    
-    try:
-        result = parse(test_code)
-        print("\n--- AST EM FORMATO DE ÁRVORE ---")
-        print_arvore(result)
-    except ParserError as e:
-        print(f"Erro: {e}")
