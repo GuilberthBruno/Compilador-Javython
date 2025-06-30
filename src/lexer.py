@@ -1,14 +1,13 @@
 import ply.lex as lex
 
-# Lista de nomes de tokens - CORRIGIDO: Removidos tokens duplicados
+# Lista de nomes de tokens 
 tokens = [
     'ID',          # Identificadores
     'NUMBER',      # Números (inteiros e floats)
     'STRING_LITERAL', # Literais de string
     'BOOLEAN_LITERAL', # Literais booleanos
     'PLUS',        # + (soma)
-    'MINUS',       # - (subtração)
-    'UMINUS',      # - (menos unário)
+    'MINUS',       # - (subtração) # Este é o token para o operador '-'
     'TIMES',       # * (multiplicação)
     'DIVIDE',      # / (divisão)
     'NOT',         # ! (negação)
@@ -28,7 +27,7 @@ tokens = [
     'COMMA',       # , (vírgula)
 ]
 
-# Palavras reservadas - CORRIGIDO: Adicionadas novas palavras reservadas e tipos
+# Palavras reservadas (mantém-se como está)
 reserved = {
     'if': 'IF',
     'else': 'ELSE',
@@ -48,6 +47,7 @@ reserved = {
     'end': 'END',
     'break': 'BREAK',
 }
+
 
 # Adiciona palavras reservadas à lista de tokens
 tokens = tokens + list(reserved.values())
@@ -73,11 +73,9 @@ t_COLON = r':'
 t_SEMICOLON = r';'
 t_COMMA = r','
 
-# Regra para identificadores - CORRIGIDO: Agora os IDs são case-insensitive para as palavras reservadas
+# Regra para identificadores 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
-    # Converte para minúsculas para verificação de palavras reservadas, conforme a especificação.
-    # [cite_start]A linguagem não é sensível a maiúsculas e minúsculas nos nomes das variáveis, métodos e palavras reservadas[cite: 35].
     t.type = reserved.get(t.value.lower(), 'ID')
     return t
 
@@ -93,8 +91,7 @@ def t_NUMBER(t):
 # Regra para literais de string
 def t_STRING_LITERAL(t):
     r'"([^"\\]|\\.)*"'
-    # Remove as aspas do valor
-    t.value = t.value[1:-1]
+    t.value = t.value  
     return t
 
 # Regra para literais booleanos

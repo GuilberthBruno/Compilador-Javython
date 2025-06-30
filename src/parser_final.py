@@ -1,3 +1,5 @@
+# parser_final.py
+
 import ply.yacc as yacc
 import lexer
 from pprint import pprint
@@ -55,8 +57,8 @@ def p_declarations(p):
                     | empty'''
     if len(p) > 2:
         p[0] = ('declarations', p[3], p.lineno(1))
-    else:
-        p[0] = ('declarations', [], p.lineno(1) if p.slice[0].type == 'DECIDS' else 0)
+    else: # caso empty
+        p[0] = []
 
 def p_vars_and_consts_declarations(p):
     '''vars_and_consts_declarations : var_declaration
@@ -279,22 +281,34 @@ def p_block_statement(p):
     p[0] = ('block', p[2], lineno)
 
 def p_block_content(p):
-    '''block_content : declarations statements
-                     | declarations
-                     | statements
-                     | empty'''
-    decls_node = ('declarations', [], 0)
-    stmts_list = []
-
-    if len(p) == 3:
-        decls_node = p[1]
-        stmts_list = p[2]
-    elif len(p) == 2:
-        if isinstance(p[1], tuple) and p[1][0] == 'declarations':
-            decls_node = p[1]
-        elif isinstance(p[1], list):
-            stmts_list = p[1]
+    '''block_content : optional_declarations optional_statements'''
+    decls_node = p[1]
+    stmts_list = p[2]
     p[0] = (decls_node, stmts_list)
+
+def p_optional_declarations(p):
+    '''optional_declarations : declarations
+                             | empty'''
+    # Se a regra 'declarations' foi reduzida via 'empty' (Rule 4), p[1] será '[]'.
+    # Se 'optional_declarations' for reduzida via 'empty' (Rule 51), p[1] será '[]'.
+    # Em ambos os casos, trate como declarações vazias.
+    if p[1] == []:
+        # Retorna um nó de declarações vazias consistente.
+        # Tenta pegar a linha do token DECIDS se presente, senão 0.
+        # Note: p.lineno(1) aqui se refere ao 'empty' token, que não tem lineno.
+        # Uma linha mais precisa exigiria um token DECIDS com lineno para optional_declarations.
+        # Por simplicidade, 0 é um placeholder seguro para vazio.
+        p[0] = ('declarations', [], 0)
+    else:
+        p[0] = p[1]
+
+def p_optional_statements(p):
+    '''optional_statements : statements
+                           | empty'''
+    if p[1] == []:
+        p[0] = []
+    else:
+        p[0] = p[1]
 
 def p_assignment(p):
     '''assignment : ID ASSIGN expression'''
@@ -473,47 +487,54 @@ def p_term(p):
         result_type = 'float' if 'float' in [left_type, right_type] else 'int'
         p[0] = (result_type, 'binop', op, left_term, right_factor, lineno)
 
+# MODIFICAÇÃO CHAVE AQUI: p_factor para lidar com STRING_LITERAL, NUMBER, BOOLEAN_LITERAL
+# Verifique o `p.slice[1].type` para distinguir o token
 def p_factor(p):
     '''factor : ID
               | NUMBER
               | STRING_LITERAL
               | BOOLEAN_LITERAL
               | LPAREN expression RPAREN
-              | function_call'''
+              | function_call
+              | MINUS factor %prec UMINUS''' # Mantenha a regra UMINUS aqui no parser_final.py
+
     lineno = p.lineno(1)
 
-    if len(p) == 2:
+    if len(p) == 2: # Casos de ID, NUMBER, STRING_LITERAL, BOOLEAN_LITERAL, function_call
         val = p[1]
-        if isinstance(val, str):
-            if val.lower() == 'true' or val.lower() == 'false':
-                p[0] = ('bool_literal', bool(val.lower() == 'true'), 'bool', lineno)
-            elif val.startswith('"') and val.endswith('"'):
-                p[0] = ('str_literal', val, 'str', lineno)
-            else: # ID
-                sym = lookup_symbol(val)
-                if not sym:
-                    raise SemanticError(f"Erro semântico: Variável '{val}' não declarada na linha {lineno}.")
-                p[0] = ('ID', val, sym['type'], lineno)
-        elif isinstance(val, int):
-            p[0] = ('int_literal', val, 'int', lineno)
-        elif isinstance(val, float):
-            p[0] = ('float_literal', val, 'float', lineno)
-        elif isinstance(val, tuple) and val[0] == 'call':
+        token_type = p.slice[1].type # Use p.slice[1].type para obter o tipo original do token
+
+        if token_type == 'BOOLEAN_LITERAL':
+            # O lexer já deve ter convertido para bool Python se t_BOOLEAN_LITERAL estiver correto
+            p[0] = ('bool_literal', val, 'bool', lineno) # val já é True/False
+        elif token_type == 'STRING_LITERAL':
+            # O lexer já removeu as aspas, então val é a string limpa
+            p[0] = ('str_literal', val, 'str', lineno)
+        elif token_type == 'NUMBER':
+            if isinstance(val, int):
+                p[0] = ('int_literal', val, 'int', lineno)
+            elif isinstance(val, float):
+                p[0] = ('float_literal', val, 'float', lineno)
+            else: # Fallback, embora t_NUMBER já deva garantir int/float
+                 raise SemanticError(f"Erro semântico: Valor numérico inesperado '{val}' na linha {lineno}.")
+        elif token_type == 'ID':
+            sym = lookup_symbol(val)
+            if not sym:
+                raise SemanticError(f"Erro semântico: Variável '{val}' não declarada na linha {lineno}.")
+            p[0] = ('ID', val, sym['type'], lineno)
+        elif isinstance(val, tuple) and val[0] == 'call': # Se for uma chamada de função, o nó já está formatado
             p[0] = val
+        else: # Tipo de token inesperado para fator de tamanho 2
+             raise SemanticError(f"Erro semântico: Fator inesperado do tipo '{token_type}' com valor '{val}' na linha {lineno}.")
+    elif len(p) == 3: # Caso de MINUS factor (UMINUS)
+        expr_node = p[2]
+        expr_type = get_expression_type(expr_node, lineno)
+        if expr_type not in ['int', 'float']:
+            raise SemanticError(f"Erro semântico: Operador unário '-' só pode ser aplicado a tipos 'int' ou 'float', mas recebeu '{expr_type}' na linha {lineno}.")
+        p[0] = (expr_type, 'uminus', expr_node, lineno)
     else: # LPAREN expression RPAREN
         expr_internal_type = get_expression_type(p[2], lineno)
         p[0] = (expr_internal_type, 'parenthesized_expr', p[2], lineno)
-
-def p_factor_uminus(p):
-    '''factor : MINUS factor %prec UMINUS'''
-    expr_node = p[2]
-    lineno = p.lineno(1)
-
-    expr_type = get_expression_type(expr_node, lineno)
-    if expr_type not in ['int', 'float']:
-        raise SemanticError(f"Erro semântico: Operador unário '-' só pode ser aplicado a tipos 'int' ou 'float', mas recebeu '{expr_type}' na linha {lineno}.")
-
-    p[0] = (expr_type, 'uminus', expr_node, lineno)
 
 def p_function_call(p):
     '''function_call : ID LPAREN expression_list RPAREN'''
@@ -553,22 +574,38 @@ def p_error(p):
     raise ParserError(error_msg)
 
 # --- Funções Auxiliares de Análise Semântica ---
-
+# MODIFICAÇÃO CHAVE AQUI: get_expression_type para lidar com a nova estrutura de AST de literais e IDs
 def get_expression_type(expr_node, lineno):
     if isinstance(expr_node, tuple):
-        node_type = expr_node[0]
-        if node_type in ['int_literal', 'float_literal', 'str_literal', 'bool_literal', 'ID']:
+        node_label = expr_node[0] # Primeiro elemento é o tipo do nó ou o tipo inferido
+
+        # Se é um nó de literal ou ID, o tipo está na posição 2
+        if node_label in ['int_literal', 'float_literal', 'str_literal', 'bool_literal', 'ID']:
             return expr_node[2]
-        elif node_type == 'parenthesized_expr':
+        # Se é uma expressão entre parênteses, o tipo é o da expressão interna (p[2])
+        elif node_label == 'parenthesized_expr':
             return get_expression_type(expr_node[2], lineno)
-        elif node_type in ['int', 'float', 'str', 'bool', 'void']:
-            return node_type
-        elif node_type == 'condition':
-            return 'bool'
-        raise SemanticError(f"Erro semântico: Não foi possível inferir o tipo da expressão na linha {lineno}. Nó: {expr_node[0]}")
+        # Se é um nó de operação (binop, uminus, call, condition), o tipo já é o primeiro elemento
+        elif node_label in ['int', 'float', 'str', 'bool', 'void']:
+            return node_label
+        else:
+            raise SemanticError(f"Erro semântico: Não foi possível inferir o tipo da expressão. Nó AST inesperado '{node_label}' na linha {lineno}. Conteúdo: {expr_node}")
     elif isinstance(expr_node, list) and not expr_node:
         return 'void'
-    return 'unknown'
+    else:
+        # Fallback para casos que não são tuplas (não deveria acontecer com AST bem formada)
+        if isinstance(expr_node, int): return 'int'
+        if isinstance(expr_node, float): return 'float'
+        if isinstance(expr_node, bool): return 'bool'
+        if isinstance(expr_node, str):
+            # Isso é perigoso, pois pode ser um ID não transformado em nó AST
+            # Ou um literal de string que não foi encapsulado corretamente.
+            # Idealmente, não deveria chegar aqui para strings que precisam de lookup_symbol.
+            # Se for uma string literal "foo", seu tipo é 'str'. Se for um ID 'foo', precisa de lookup.
+            return 'str' # Assumindo que se chegou aqui é porque já é um literal string limpo.
+
+        raise SemanticError(f"Erro semântico: Tipo de nó inesperado para inferência de tipo: {type(expr_node)} na linha {lineno}.")
+
 
 def is_type_compatible(expected, actual):
     if expected == actual:
@@ -616,10 +653,10 @@ def parse(data):
         print(f"Erro semântico: {e}")
         raise e
     except Exception as e:
-        print(f"Erro durante o parsing: {e}")
+        print(f"Erro durante o parsing: {e} [cite: 36, 44]") # Citando ferramentas
         raise e
 
-# --- Funções de Impressão da AST (sem comentários) ---
+# --- Funções de Impressão da AST ---
 
 def tuplas_para_listas(obj):
     if isinstance(obj, tuple):
@@ -669,6 +706,7 @@ def print_arvore(node, prefix="", is_last=True):
 
 # --- Testes ---
 if __name__ == "__main__":
+    # Adicione chaves ao redor do corpo do 'main' em todos os test_codes!
     test_code = """
     program: TesteMetodosNativos;
 decIds:
@@ -679,7 +717,7 @@ decIds:
     PI = 3.14159;
     saudacao = "Olá, Javython!";
     MAX_SIZE = 100;
-main:
+main: { // CORREÇÃO AQUI
     print("Olá, bem-vindo ao teste de métodos nativos!");
     print("Por favor, digite suas informações:");
 
@@ -738,48 +776,50 @@ main:
             break;
         }
     }
+} // CORREÇÃO AQUI
 end
     """
     test_error_code = """
     program: TesteErrosSemanticos;
 decIds:
     minhaVariavel: int;
-    minhavariavel: float;
+    minhavariavel: float; // Erro: ID case-insensitive já declarado
     PI = 3.14;
-    print = 5;
-main:
+    print = 5; // Erro: Palavra reservada como ID
+main: { // CORREÇÃO AQUI
     minhaConstante = 10;
-    minhaConstante = 20;
-    input(minhaConstante);
+    minhaConstante = 20; // Erro: Reatribuição de constante
+    input(minhaConstante); // Erro: Input em constante
     outraVariavel = "texto";
-    minhaVariavel = "cinco";
+    minhaVariavel = "cinco"; // Erro: Tipo incompatível int = str
     boolVar: bool;
-    boolVar = 10;
-    if ("string") {
+    boolVar = 10; // Erro: Tipo incompatível bool = int
+    if ("string") { // Erro: Condição não booleana
         print("Erro");
     }
-    resultado = 10 + "string";
-    return 10;
+    resultado = 10 + "string"; // Erro: Soma int + str (fora de concatenação explícita com str literal)
+    return 10; // Erro: Return fora de um método com tipo de retorno
 
-    void teste() {
+    void teste() { // Erro: Método declarado dentro do main (Não aninhado)
         return;
     }
-    minhaVarNaoDeclarada = 1;
-    break;
-
+    minhaVarNaoDeclarada = 1; // Erro: Variável não declarada
+    break; // Erro: Break fora de um loop
+} // CORREÇÃO AQUI
 end
     """
 
     test_method_return_error = """
     program: TesteRetorno;
     int meuMetodoInt() {
-        return "string";
+        return "string"; // Erro: Retorno tipo incompatível
     }
     void meuMetodoVoid() {
-        return 5;
+        return 5; // Erro: Retorno de valor em void method
     }
-    main:
+    main: { // CORREÇÃO AQUI
         print("Testando retornos.");
+    } // CORREÇÃO AQUI
     end
     """
 

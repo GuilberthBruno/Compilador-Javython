@@ -1,6 +1,7 @@
 import ply.yacc as yacc
 from lexer import tokens
 from pprint import pprint
+from semantic import SemanticAnalyzer
 
 # Dicionário para armazenar variáveis (tabela de símbolos simples)
 symbol_table = {}
@@ -11,7 +12,7 @@ class ParserError(Exception):
 
 # Regras de gramática para o parser
 def p_program(p):
-    '''program : PROGRAM COLON ID SEMICOLON program_content END'''
+    '''program : PROGRAM COLON ID SEMICOLON program_content END''' # END moved here
     p[0] = ('program', p[3], p[5])
 
 # Conteúdo principal do programa: declarações globais, métodos e o método main
@@ -19,41 +20,41 @@ def p_program_content(p):
     '''program_content : declarations methods_list main_method'''
     p[0] = (p[1], p[2], p[3])
 
-# Declarações de variáveis e constantes (globais)
+# Declarações de variáveis e constantes (globais ou dentro de blocos)
 def p_declarations(p):
     '''declarations : DECIDS COLON vars_and_consts_declarations
                     | empty'''
     if len(p) > 2:
         p[0] = ('declarations', p[3])
     else:
-        p[0] = ('declarations', [])
+        p[0] = ('declarations', []) # Ensure it's always a tuple for consistency
 
 # Regra para repetição de declarações
 def p_vars_and_consts_declarations(p):
-    '''vars_and_consts_declarations : var_or_const_declaration
-                                    | var_or_const_declaration vars_and_consts_declarations'''
+    '''vars_and_consts_declarations : var_declaration
+                                    | var_declaration vars_and_consts_declarations'''
     if len(p) == 2:
         p[0] = [p[1]]
     else:
         p[0] = [p[1]] + p[2]
 
-# Declaração de variáveis ou constantes (grupo ou individual)
-def p_var_or_const_declaration_group(p):
-    '''var_or_const_declaration : ID COMMA ID_list COLON type SEMICOLON'''
-    p[0] = ('declare_group', [p[1]] + p[3], p[5])
-    for var_id in [p[1]] + p[3]:
-        symbol_table[var_id] = {'type': p[5], 'value': None}
-
-def p_var_or_const_declaration_single(p):
-    '''var_or_const_declaration : ID COLON type SEMICOLON
-                                | ID ASSIGN expression SEMICOLON'''
-    if len(p) == 5:
-        if p[2] == ':':
+# Declaração de variáveis ou constantes (grupo ou individual) - unified from var_or_const_declaration
+def p_var_declaration(p):
+    '''var_declaration : ID COMMA ID_list COLON type SEMICOLON
+                       | ID COLON type SEMICOLON
+                       | ID ASSIGN expression SEMICOLON'''
+    if len(p) == 7: # ID COMMA ID_list COLON type SEMICOLON
+        p[0] = ('declare_group', [p[1]] + p[3], p[5])
+        for var_id in [p[1]] + p[3]:
+            symbol_table[var_id] = {'type': p[5], 'value': None}
+    elif len(p) == 5:
+        if p[2] == ':': # ID COLON type SEMICOLON
             p[0] = ('declare', p[3], p[1])
             symbol_table[p[1]] = {'type': p[3], 'value': None}
-        else:
+        else: # ID ASSIGN expression SEMICOLON
             p[0] = ('const_assign', p[1], p[3])
-            symbol_table[p[1]] = {'type': 'const', 'value': p[3]}
+            # Assuming 'const' implies its type is derived from the expression
+            symbol_table[p[1]] = {'type': 'inferred', 'value': p[3]} # Type inferred for constants
 
 def p_ID_list(p):
     '''ID_list : ID
@@ -82,8 +83,8 @@ def p_methods_list(p):
 
 def p_method_declaration(p):
     '''method_declaration : type_or_void ID LPAREN parameters_list RPAREN LBRACE block_content RBRACE'''
-    p[0] = ('method', p[1], p[2], p[4], p[7])
-    
+    p[0] = ('method', p[1], p[2], p[4], p[7]) # p[7] is block_content
+
 def p_type_or_void(p):
     '''type_or_void : type
                     | VOID'''
@@ -111,28 +112,13 @@ def p_parameter(p):
 
 # Método main, de acordo com a sintaxe do exemplo no PDF
 def p_main_method(p):
-    '''main_method : MAIN COLON main_body'''
-    p[0] = ('main', p[3])
-
-def p_main_body(p):
-    '''main_body : declarations statements
-                 | statements
-                 | empty'''
-    if len(p) == 3:
-        p[0] = (p[1], p[2])
-    elif len(p) == 2:
-        if p[1][0] == 'declarations':
-            p[0] = (p[1], [])
-        else:
-            p[0] = (('declarations', []), p[1])
-    else:
-        p[0] = (('declarations', []), [])
-    
+    '''main_method : MAIN COLON block_content''' # Main now uses block_content directly
+    p[0] = ('main', p[3]) # p[3] is the block_content
 
 # Bloco de declarações vazias
 def p_empty(p):
     'empty :'
-    pass
+    p[0] = [] # Returning an empty list for consistency when 'empty' is used for content
 
 # Bloco de statements
 def p_statements(p):
@@ -164,6 +150,22 @@ def p_assignment_statement(p):
 def p_print_statement(p):
     '''print_statement : PRINT LPAREN expression_list RPAREN SEMICOLON'''
     p[0] = ('print', p[3])
+
+def p_print_items(p):
+    '''print_items : print_item
+                  | print_item COMMA print_items'''
+    if len(p) == 2:
+        p[0] = [p[1]]
+    else:
+        p[0] = [p[1]] + p[3]
+
+def p_print_item(p):
+    '''print_item : STRING_LITERAL
+                 | expression'''
+    if isinstance(p[1], str) and p[1].startswith('"'):
+        p[0] = ('string_literal', p[1])
+    else:
+        p[0] = p[1]
 
 def p_input_statement(p):
     '''input_statement : INPUT LPAREN variable_list RPAREN SEMICOLON'''
@@ -199,15 +201,22 @@ def p_block_content(p):
                      | declarations
                      | statements
                      | empty'''
-    if len(p) == 3:
-        p[0] = (p[1], p[2])
+    # This handles declarations and statements being optional and in any order
+    # It attempts to separate them, so the AST representation is clear.
+    decls = []
+    stmts = []
+
+    if len(p) == 3: # declarations statements
+        decls = p[1]
+        stmts = p[2]
     elif len(p) == 2:
-        if p[1] and isinstance(p[1], tuple) and p[1][0] == 'declarations':
-            p[0] = (p[1], [])
-        else:
-            p[0] = (('declarations', []), p[1])
-    else:
-        p[0] = (('declarations', []), [])
+        if isinstance(p[1], tuple) and p[1][0] == 'declarations':
+            decls = p[1]
+        elif isinstance(p[1], list) and (not p[1] or isinstance(p[1][0], tuple)): # Check if it's a list of statements
+            stmts = p[1]
+    # For empty, decls and stmts will remain empty lists.
+
+    p[0] = (decls, stmts) # Return a tuple of (declarations_node, statements_list)
 
 
 # Atribuição
@@ -244,7 +253,7 @@ def p_for_statement(p):
 def p_break_statement(p):
     '''break_statement : BREAK SEMICOLON'''
     p[0] = ('break',)
-    
+
 # Condição
 def p_condition(p):
     '''condition : expression comparison expression
@@ -288,11 +297,16 @@ def p_factor(p):
               | STRING_LITERAL
               | BOOLEAN_LITERAL
               | LPAREN expression RPAREN
-              | function_call'''
+              | function_call
+              | string_literal'''
     if len(p) == 2:
         p[0] = p[1]
     else:
         p[0] = p[2]
+
+def p_string_literal(p):
+    '''string_literal : STRING_LITERAL'''
+    p[0] = ('string_literal', p[1])
 
 # Menos unário
 def p_factor_uminus(p):
@@ -318,7 +332,7 @@ def p_error(p):
     else:
         error_msg = "Erro de sintaxe na entrada: EOF inesperado"
         print(error_msg)
-    
+
     # Lança uma exceção para interromper o parsing
     raise ParserError(error_msg)
 
@@ -339,7 +353,7 @@ def parse(data):
     except ParserError as e:
         raise e
 
-# Função para converter tuplas em listas
+# Função para converter tuplas em listas (se necessário para visualização externa)
 def tuplas_para_listas(obj):
     if isinstance(obj, tuple):
         return [tuplas_para_listas(item) for item in obj]
@@ -377,47 +391,45 @@ def print_arvore(node, prefix="", is_last=True):
 # Função principal para teste
 if __name__ == "__main__":
     test_code = """
-    program: TesteMetodosNativos;
-decIds:
-    nome: str;
-    idade: int;
-    altura: float;
-    isEstudante: bool;
-main:
-    // Testando o método print com diferentes tipos de literais e variáveis
-    print("Olá, bem-vindo ao teste de métodos nativos!"); 
-    print("Por favor, digite suas informações:"); 
+    program: TesteErrosSemanticos;
+    decIds:
+        idade: int;
+        salario: float;
+        nome: str;
+        ativo: bool;
 
-    // Testando o método input para strings
-    print("Qual é o seu nome?"); 
-    input(nome); 
+    int calcularDobro(int x) {
+        return x * 2;
+    }
 
-    // Testando o método input para inteiros
-    print("Qual é a sua idade?"); 
-    input(idade); 
+    int soma(int a, int b) {
+        return a + b;
+    }
 
-    // Testando o método input para floats
-    print("Qual é a sua altura em metros (ex: 1.75)?"); 
-    input(altura);
+    main:
+        resultado = dobro * 2;
+        idade = "vinte e cinco";
+        PI = 3.1415;
+        valor = calcularDobro(salario);
+        total = idade + nome;
+        
+        print(mensagem);
+        divisao = 100 / 0;
+    end
+        """
 
-    // Testando o método print com concatenação de strings e variáveis
-    print("Seu nome é:", nome);
-    print("Sua idade é:", idade, "anos.");
-    print("Sua altura é:", altura, "metros."); 
-
-    // Exemplo de atribuição de booleano
-    isEstudante = true; 
-    print("Você é estudante?", isEstudante); 
-
-    // Testando expressões em print
-    print("Sua idade em meses é:", idade * 12); 
-    print("Sua altura em centímetros é:", altura * 100); 
-end
-    """
-    
     try:
-        result = parse(test_code)
+        ast = parse(test_code)
         print("\n--- AST EM FORMATO DE ÁRVORE ---")
-        print_arvore(result)
+        print_arvore(ast)
+        if ast:
+            # Realiza análise semântica
+            analyzer = SemanticAnalyzer()
+            if analyzer.analyze(ast):
+                print("Análise semântica concluída sem erros!")
+            else:
+                print("\n--- ERROS SEMÂNTICOS ---")
+                for error in analyzer.get_errors():
+                    print(error)
     except ParserError as e:
         print(f"Erro: {e}")
