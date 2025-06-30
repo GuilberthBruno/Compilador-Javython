@@ -1,2 +1,11 @@
+javython.txt
+parser.out
+parsetab.py
 
+!src/
+*
+!src/*
 
+__pycache__/
+
+!README.md
