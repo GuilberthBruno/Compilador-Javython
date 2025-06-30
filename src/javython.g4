@@ -1,25 +1,56 @@
-grammar javython;
-
 program
-    : 'program' ':' ID ';' declarations statements?
+    : PROGRAM COLON ID SEMICOLON declarations methods_list main_method END
     ;
 
 declarations
-    : 'decIds' ':' varsDeclarations
-    | // vazio
+    : DECIDS COLON var_declaration+
+    | empty
     ;
 
-varsDeclarations
-    : varDeclaration+
-    ;
-
-varDeclaration
-    : ID ':' type ';'
+var_declaration
+    : ID (COMMA ID)* COLON type SEMICOLON           # Declaração de grupo
+    | ID COLON type SEMICOLON                       # Declaração única
+    | ID ASSIGN expression SEMICOLON                # Atribuição de constante
     ;
 
 type
-    : 'int'
-    | 'float'
+    : INT
+    | FLOAT
+    | BOOL
+    | STR
+    ;
+
+methods_list
+    : method_declaration*
+    ;
+
+method_declaration
+    : type_or_void ID LPAREN parameters_list RPAREN LBRACE block_content RBRACE
+    ;
+
+type_or_void
+    : type
+    | VOID
+    ;
+
+parameters_list
+    : parameter (COMMA parameter)*
+    | empty
+    ;
+
+parameter
+    : type ID
+    ;
+
+main_method
+    : MAIN COLON block_content
+    ;
+
+block_content
+    : declarations statements
+    | declarations
+    | statements
+    | empty
     ;
 
 statements
@@ -27,79 +58,106 @@ statements
     ;
 
 statement
-    : assignmentStatement
-    | ifStatement
-    | whileStatement
-    | forStatement
-    | printStatement
-    | inputStatement
-    | block
-    ;
-
-assignmentStatement
-    : assignment ';'
+    : assignment SEMICOLON
+    | if_statement
+    | while_statement
+    | for_statement
+    | print_statement
+    | input_statement
+    | return_statement
+    | break_statement
+    | block_statement
+    | function_call SEMICOLON
     ;
 
 assignment
-    : ID '=' expression
-    | ID '++'
-    | ID '--'
+    : ID ASSIGN expression
+    | ID INCREMENT
+    | ID DECREMENT
     ;
 
-ifStatement
-    : 'if' '(' condition ')' statement ('else' statement)?
+if_statement
+    : IF LPAREN condition RPAREN block_statement (ELSE block_statement)?
     ;
 
-whileStatement
-    : 'while' '(' condition ')' statement
+while_statement
+    : WHILE LPAREN condition RPAREN block_statement
     ;
 
-forStatement
-    : 'for' '(' assignment ':' condition ':' assignment ')' statement
+for_statement
+    : FOR LPAREN assignment SEMICOLON condition SEMICOLON assignment RPAREN block_statement
     ;
 
-printStatement
-    : 'print' '(' expression ')' ';'
+print_statement
+    : PRINT LPAREN expression_list RPAREN SEMICOLON
     ;
 
-inputStatement
-    : 'input' '(' ID ')' ';'
+input_statement
+    : INPUT LPAREN ID (COMMA ID)* RPAREN SEMICOLON
     ;
 
-block
-    : '{' statements? '}'
+return_statement
+    : RETURN expression SEMICOLON
+    ;
+
+break_statement
+    : BREAK SEMICOLON
+    ;
+
+block_statement
+    : LBRACE block_content RBRACE
     ;
 
 condition
     : expression comparison expression
-    | '!' condition
+    | NOT expression
     ;
 
 comparison
-    : '==' | '!=' | '>' | '<'
+    : EQUALS
+    | NEQUALS
+    | GT
+    | LT
     ;
 
 expression
-    : expression '+' term
-    | expression '-' term
+    : expression PLUS term
+    | expression MINUS term
     | term
     ;
 
 term
-    : term '*' factor
-    | term '/' factor
+    : term TIMES factor
+    | term DIVIDE factor
     | factor
     ;
 
 factor
-    : '-' factor                     # unaryMinus
-    | '(' expression ')'             # nestedExpr
-    | NUMBER
+    : MINUS factor %prec UMINUS
+    | LPAREN expression RPAREN
     | ID
+    | NUMBER
+    | STRING_LITERAL
+    | BOOLEAN_LITERAL
+    | function_call
     ;
 
-// Tokens
-ID      : [a-zA-Z_][a-zA-Z_0-9]* ;
-NUMBER  : [0-9]+ ('.' [0-9]+)? ;
-WS      : [ \t\r\n]+ -> skip ;
-COMMENT : '//' ~[\r\n]* -> skip ;
+function_call
+    : ID LPAREN expression_list RPAREN
+    ;
+
+expression_list
+    : expression (COMMA expression)*
+    ;
+
+empty
+    : /* nothing */
+    ;
+
+// Tokens (adicionais ou corrigidos)
+ID : [a-zA-Z_][a-zA-Z_0-9]*
+NUMBER : \d*\.?\d+
+STRING_LITERAL : "([^"\\]|\\.)*"
+BOOLEAN_LITERAL : 'true' | 'false'
+COMMENT : '//' .*
+WS : [ \t\n]+
