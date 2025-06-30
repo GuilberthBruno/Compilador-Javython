@@ -14,7 +14,7 @@ def display_ast(ast):
 
 def main():
     if len(sys.argv) != 2:
-        print("Uso: python -m src.main <arquivo.txt>")
+        print("Uso: python -m main <arquivo.jy>")
         sys.exit(1)
     
     input_file = Path(sys.argv[1])
