@@ -1,8 +1,16 @@
 import sys
 from pathlib import Path
 from lexer import lexer
-from parser import parse
+from parser import parse, print_arvore  
 from semantic import SemanticAnalyzer
+
+def display_ast(ast):
+    """Exibe a AST de forma hierárquica no terminal"""
+    print("\n" + "="*50)
+    print("ÁRVORE SINTÁTICA ABSTRATA (AST)")
+    print("="*50)
+    print_arvore(ast)  # Usa a função do parser.py
+    print("\n" + "="*50)
 
 def main():
     if len(sys.argv) != 2:
@@ -25,12 +33,15 @@ def main():
         print(f"Erro durante análise sintática:\n{e}")
         sys.exit(1)
     
-    # 3. Análise semântica
+    # 3. Exibe a AST
+    display_ast(ast)
+    
+    # 4. Análise semântica
     analyzer = SemanticAnalyzer()
     if analyzer.analyze(ast):
-        print("Análise concluída com sucesso!")
+        print("\n✅ Análise semântica concluída sem erros!")
     else:
-        print("\nErros semânticos encontrados:")
+        print("\n❌ Erros semânticos encontrados:")
         for error in analyzer.get_errors():
             print(f"- {error}")
         sys.exit(1)
