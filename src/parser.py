@@ -1,5 +1,6 @@
 import ply.yacc as yacc
 from lexer import tokens
+from pprint import pprint
 
 # Dicionário para armazenar variáveis (tabela de símbolos simples)
 symbol_table = {}
@@ -150,7 +151,9 @@ def p_statement(p):
                  | print_statement
                  | input_statement
                  | return_statement
-                 | block_statement'''
+                 | break_statement
+                 | block_statement
+                 | function_call_statement'''
     p[0] = p[1]
 
 # Statements que terminam com ponto e vírgula
@@ -238,6 +241,10 @@ def p_for_statement(p):
     '''for_statement : FOR LPAREN assignment_statement condition SEMICOLON assignment RPAREN block_statement'''
     p[0] = ('for', p[3], p[4], p[6], p[8])
 
+def p_break_statement(p):
+    '''break_statement : BREAK SEMICOLON'''
+    p[0] = ('break',)
+    
 # Condição
 def p_condition(p):
     '''condition : expression comparison expression
@@ -297,6 +304,11 @@ def p_function_call(p):
     '''function_call : ID LPAREN expression_list RPAREN'''
     p[0] = ('call', p[1], p[3])
 
+# Chamada de função como statement
+def p_function_call_statement(p):
+    '''function_call_statement : function_call SEMICOLON'''
+    p[0] = p[1]
+
 # Tratamento de erros sintáticos
 def p_error(p):
     error_msg = ""
@@ -327,22 +339,85 @@ def parse(data):
     except ParserError as e:
         raise e
 
+# Função para converter tuplas em listas
+def tuplas_para_listas(obj):
+    if isinstance(obj, tuple):
+        return [tuplas_para_listas(item) for item in obj]
+    elif isinstance(obj, list):
+        return [tuplas_para_listas(item) for item in obj]
+    elif isinstance(obj, dict):
+        return {k: tuplas_para_listas(v) for k, v in obj.items()}
+    else:
+        return obj
+
+# Função para imprimir a AST em formato de árvore
+def print_arvore(node, prefix="", is_last=True):
+    """Imprime a AST em formato de árvore, de forma recursiva e legível."""
+    if isinstance(node, (list, tuple)):
+        # Nome do nó (tipo)
+        if isinstance(node, tuple) and len(node) > 0 and isinstance(node[0], str):
+            label = node[0]
+            print(prefix + ("└── " if is_last else "├── ") + str(label))
+            children = node[1:]
+        else:
+            children = node
+        # Recursão para filhos
+        for i, child in enumerate(children):
+            is_last_child = (i == len(children) - 1)
+            print_arvore(child, prefix + ("    " if is_last else "│   "), is_last_child)
+    elif isinstance(node, dict):
+        print(prefix + ("└── " if is_last else "├── ") + "{dict}")
+        for i, (k, v) in enumerate(node.items()):
+            is_last_child = (i == len(node) - 1)
+            print(prefix + ("    " if is_last else "│   ") + ("└── " if is_last_child else "├── ") + str(k))
+            print_arvore(v, prefix + ("    " if is_last else "│   ") + ("    " if is_last_child else "│   "), True)
+    else:
+        print(prefix + ("└── " if is_last else "├── ") + str(node))
+
 # Função principal para teste
 if __name__ == "__main__":
     test_code = """
-    program: TesteSimples;
-    decIds:
-        x: int;
-    main:
-        x = 10;
-        print(x);
-    end
+    program: TesteMetodosNativos;
+decIds:
+    nome: str;
+    idade: int;
+    altura: float;
+    isEstudante: bool;
+main:
+    // Testando o método print com diferentes tipos de literais e variáveis
+    print("Olá, bem-vindo ao teste de métodos nativos!"); 
+    print("Por favor, digite suas informações:"); 
+
+    // Testando o método input para strings
+    print("Qual é o seu nome?"); 
+    input(nome); 
+
+    // Testando o método input para inteiros
+    print("Qual é a sua idade?"); 
+    input(idade); 
+
+    // Testando o método input para floats
+    print("Qual é a sua altura em metros (ex: 1.75)?"); 
+    input(altura);
+
+    // Testando o método print com concatenação de strings e variáveis
+    print("Seu nome é:", nome);
+    print("Sua idade é:", idade, "anos.");
+    print("Sua altura é:", altura, "metros."); 
+
+    // Exemplo de atribuição de booleano
+    isEstudante = true; 
+    print("Você é estudante?", isEstudante); 
+
+    // Testando expressões em print
+    print("Sua idade em meses é:", idade * 12); 
+    print("Sua altura em centímetros é:", altura * 100); 
+end
     """
     
     try:
         result = parse(test_code)
-        print("\n--- AST GERADA ---")
-        import json
-        print(json.dumps(result, indent=4))
+        print("\n--- AST EM FORMATO DE ÁRVORE ---")
+        print_arvore(result)
     except ParserError as e:
         print(f"Erro: {e}")

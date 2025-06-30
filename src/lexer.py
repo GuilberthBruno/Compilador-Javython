@@ -41,11 +41,12 @@ reserved = {
     'print': 'PRINT',
     'input': 'INPUT',
     'program': 'PROGRAM',
-    'decIds': 'DECIDS',
+    'decids': 'DECIDS',
     'void': 'VOID',
     'return': 'RETURN',
     'main': 'MAIN',
     'end': 'END',
+    'break': 'BREAK',
 }
 
 # Adiciona palavras reservadas à lista de tokens
@@ -109,7 +110,6 @@ t_ignore = ' \t'
 # Regra para ignorar comentários de linha
 def t_COMMENT(t):
     r'//.*'
-    [cite_start] 
     pass  # Comentários são ignorados[cite: 23].
 
 # Regra para nova linha
@@ -139,31 +139,27 @@ def tokenize(data):
 # Função principal para teste
 if __name__ == "__main__":
     test_code = """
-    program: Exemplo;
+    program: TesteMetodos;
     decIds:
-        i: int;
-        PI = 3.14; // comentario
-        flag : bool;
-    
-    int fatorial(int n) {
-        if (n > 1) {
-            return n * fatorial(n - 1);
-        } else {
-            return 1;
-        }
+        a: int;
+        b: int;
+    int soma(int x, int y) {
+        return x + y;
     }
-
+    void imprimeSoma(int valor) {
+        print("Soma calculada:", valor);
+    }
     main:
-        decIds:
-            x: int;
-        print("Digite um numero: ");
-        input(x);
-        x++;
-        print("Fatorial de ", x, " eh ", fatorial(x));
+        a = 3;
+        b = 7;
+        resultado = soma(a, b);
+        imprimeSoma(resultado);
     end
     """
     
-    print("Iniciando análise léxica...")
-    lexer.input(test_code)
-    for tok in lexer:
-        print(tok)
+    try:
+        result = parse(test_code)
+        print("\n--- AST EM FORMATO DE ÁRVORE ---")
+        print_arvore(result)
+    except ParserError as e:
+        print(f"Erro: {e}")
