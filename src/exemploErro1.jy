@@ -1,17 +1,31 @@
-program: ExemploErro;
+program: TesteBooleano;
 
-decIDs:
-    x : int;
-    x : float;  // ERRO: 'x' redeclarado com tipo diferente
+bool maiorQue10(int n){
+    decIds:
+        resultado : bool;
 
-int soma(int a, int b) {
-    decIDs:
-        a : int;  // ERRO: 'a' já é parâmetro
-    return a + b;
+    if (n > 10) {
+        resultado = true;
+    } else {
+        resultado = false;
+    }
+    return resultado;
 }
 
 main:
-    decIDs:
-        y : int;
-    y = soma(5, 3);
+    decIds:
+        numero : int;
+        condicao : bool;
+
+    print ("Digite um número:");
+    input(numero);
+
+    condicao = maiorQue10(numero);
+
+    if (condicao) {
+        print ("Maior que 10");
+    } else {
+        print ("Menor ou igual a 10");
+    }
+
 end
