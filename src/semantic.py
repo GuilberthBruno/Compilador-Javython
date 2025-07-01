@@ -127,6 +127,9 @@ class SemanticAnalyzer:
                 elif decl[0] == 'const_assign':
                     var_name = decl[1]
                     value = decl[2]
+
+                # Só adiciona à tabela se ainda não estiver definido
+                if not self.is_symbol_defined(var_name):
                     if isinstance(value, bool):
                         var_type = 'bool'
                     elif isinstance(value, int):
@@ -137,6 +140,7 @@ class SemanticAnalyzer:
                         var_type = 'str'
                     else:
                         var_type = 'unknown'
+
                     self.add_symbol(var_name, var_type, self.current_scope, is_const=True)
         
         # Analisa statements

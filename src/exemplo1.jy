@@ -1,15 +1,11 @@
-program: Calculadora;
-decIds:
-    a,b : int;
-    resultado: int;
+program: bateria3;
 
-int soma(int x, int y) {
-    return x + y;
-}
+decIds:
+    const1 = 2;
 
 main:
-    a = 10;
-    b = 20;
-    resultado = soma(a, b);
-    print("Resultado:", resultado);
+    decIds:
+        var1 : int;
+
+    var1 = const1;
 end
