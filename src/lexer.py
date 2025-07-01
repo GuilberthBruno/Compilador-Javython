@@ -79,7 +79,7 @@ def t_ID(t):
     t.type = reserved.get(t.value.lower(), 'ID')
     return t
 
-# Regra para números - CORRIGIDO: Aceita inteiros e floats
+# Regra para números
 def t_NUMBER(t):
     r'\d+\.\d+|\d+'
     if '.' in t.value:
@@ -107,7 +107,7 @@ t_ignore = ' \t'
 # Regra para ignorar comentários de linha
 def t_COMMENT(t):
     r'//.*'
-    pass  # Comentários são ignorados[cite: 23].
+    pass  # Comentários são ignorados.
 
 # Regra para nova linha
 def t_newline(t):

@@ -1,0 +1,26 @@
+program: ExemploValido;
+
+decIDs:
+    contador : int;
+    PI : float;
+
+PI = 3.14;
+
+float calcularArea(float raio) {
+    decIDs:
+        area : float;
+    area = PI * raio * raio;
+    return area;
+}
+
+main:
+    decIDs:
+        r : float;
+        resultado : float;
+    
+    print("Digite o raio:");
+    input(r);
+    
+    resultado = calcularArea(r);
+    print("Área:", resultado);
+end

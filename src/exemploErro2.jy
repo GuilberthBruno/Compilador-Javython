@@ -1,0 +1,17 @@
+program: TiposInvalidos;
+
+decIDs:
+    idade : int;
+    nome : str;
+
+bool soma(int a) {
+    return a + 5;
+}
+
+main:
+    decIDs:
+        flag : bool;
+    
+    flag = soma(nome);  // ERRO: tipo str não pode ser usado como int
+    idade = "trinta";       // ERRO: atribuição de string para int
+end

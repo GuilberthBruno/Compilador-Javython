@@ -1,0 +1,17 @@
+program: ExemploErro;
+
+decIDs:
+    x : int;
+    x : float;  // ERRO: 'x' redeclarado com tipo diferente
+
+int soma(int a, int b) {
+    decIDs:
+        a : int;  // ERRO: 'a' já é parâmetro
+    return a + b;
+}
+
+main:
+    decIDs:
+        y : int;
+    y = soma(5, 3);
+end

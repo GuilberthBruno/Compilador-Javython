@@ -9,3 +9,4 @@ parsetab.py
 __pycache__/
 
 !README.md
+!*.jy
