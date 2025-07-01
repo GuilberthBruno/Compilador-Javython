@@ -221,6 +221,22 @@ def p_block_content(p):
     elif len(p) == 2:
         if isinstance(p[1], tuple) and p[1][0] == 'declarations':
             decls = p[1]
+            # Extrai statements que estão misturados nas declarações
+            if len(p[1]) > 1:
+                mixed_items = p[1][1]
+                real_decls = []
+                extracted_stmts = []
+                for item in mixed_items:
+                    if item[0] in ['declare', 'declare_group']:
+                        real_decls.append(item)
+                    else:
+                        # Converte const_assign para assign statement
+                        if item[0] == 'const_assign':
+                            extracted_stmts.append(('assign', item[1], item[2]))
+                        else:
+                            extracted_stmts.append(item)
+                decls = ('declarations', real_decls)
+                stmts = extracted_stmts
         elif isinstance(p[1], list) and (not p[1] or isinstance(p[1][0], tuple)):
             stmts = p[1]
 

@@ -1,12 +1,39 @@
+# Arquivos gerados pelo PLY
 javython.txt
 parser.out
 parsetab.py
 
+# Cache do Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Arquivos da IDE IntelliJ IDEA / PyCharm
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Arquivos do Visual Studio Code
+.vscode/
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Arquivos temporários
+*.tmp
+*.temp
+
+# Manter apenas a estrutura do projeto
 !src/
 *
 !src/*
 
-__pycache__/
-
+# Manter arquivos importantes
 !README.md
 !*.jy
+!.gitignore

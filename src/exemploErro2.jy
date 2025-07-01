@@ -12,6 +12,6 @@ main:
     decIDs:
         flag : bool;
     
-    flag = soma(nome);  // ERRO: tipo str não pode ser usado como int
+    flag = soma(nome);  // ERRO: tipo str não pode ser usado como int e parâmetro para função que espera int
     idade = "trinta";       // ERRO: atribuição de string para int
 end

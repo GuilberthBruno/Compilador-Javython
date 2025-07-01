@@ -1,25 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="cc3afab9-26fa-4cc6-a7ff-4769c493e0d0" name="Changes" comment="" />
+    <list default="true" id="cc3afab9-26fa-4cc6-a7ff-4769c493e0d0" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/Compilador-Javython.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Compilador-Javython.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/exemploErro2.jy" beforeDir="false" afterPath="$PROJECT_DIR$/src/exemploErro2.jy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/semantic.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/semantic.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/GuilberthBruno/Compilador-Javython",
-    "accountId": "5ee0d6d1-6a72-44a8-b320-409b739aab21"
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "CaioBurton"
   }
 }]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 6
-}]]></component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/GuilberthBruno/Compilador-Javython&quot;,
+    &quot;accountId&quot;: &quot;5ee0d6d1-6a72-44a8-b320-409b739aab21&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="2zGz8t3LqOsFujBkyjjGqK3hkNe" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -30,8 +52,12 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/Caio Burton/Desktop/Caio/UFPI/7º PERÍODO/COMPILADORES/ANTLR",
+    "git-widget-placeholder": "guilberth-dev",
+    "last_opened_file_path": "C:/Users/Caio Burton/Desktop/Caio/UFPI/7º PERÍODO/COMPILADORES/Compilador-Javython",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "org.antlr.intellij.plugin.configdialogs.ANTLRv4ProjectSettings",
     "vue.rearranger.settings.migration": "true"
@@ -53,7 +79,11 @@
       <option name="presentableId" value="Default" />
       <updated>1751372044037</updated>
       <workItem from="1751372044509" duration="19000" />
+      <workItem from="1751372064910" duration="726000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>
