@@ -1,0 +1,15 @@
+program: Calculadora;
+decIds:
+    a,b : int;
+    resultado: int;
+
+int soma(int x, int y) {
+    return x + y;
+}
+
+main:
+    a = 10;
+    b = 20;
+    resultado = soma(a, b);
+    print("Resultado:", resultado);
+end
