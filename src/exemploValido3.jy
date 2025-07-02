@@ -1,0 +1,26 @@
+program: ExemploSoma;
+
+decIDs:
+    nome : str;
+
+int soma (int  a, int b, int c){
+    decIds:
+        m : int;
+
+    m = a + b + c;
+    return m;
+}
+
+main:
+    decIds:
+        x, y, z : int;
+        resultado : int;
+
+    print("Digite três números:");
+    input(x, y, z);
+
+    resultado = soma(x, y, z);
+
+    print("A soma dos três números é:", resultado);
+
+end

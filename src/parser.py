@@ -237,8 +237,30 @@ def p_block_content(p):
                             extracted_stmts.append(item)
                 decls = ('declarations', real_decls)
                 stmts = extracted_stmts
+            else:
+                decls = p[1]
+                stmts = []
         elif isinstance(p[1], list) and (not p[1] or isinstance(p[1][0], tuple)):
             stmts = p[1]
+        else:
+            stmts = []
+    else:
+        decls = []
+        stmts = []
+
+    # Garante que qualquer const_assign perdido em decls seja convertido para assign
+    if isinstance(decls, tuple) and decls[0] == 'declarations' and len(decls) > 1:
+        real_decls = []
+        extracted_stmts = list(stmts) if stmts else []
+        for item in decls[1]:
+            if item[0] in ['declare', 'declare_group']:
+                real_decls.append(item)
+            elif item[0] == 'const_assign':
+                extracted_stmts.append(('assign', item[1], item[2]))
+            else:
+                extracted_stmts.append(item)
+        decls = ('declarations', real_decls)
+        stmts = extracted_stmts
 
     p[0] = (decls, stmts)
 
@@ -290,8 +312,10 @@ def p_condition(p):
                  | NOT expression
                  | expression'''
     if len(p) == 4:
+        # p[2] pode ser qualquer operador de comparação, incluindo <, >, ==, !=
         p[0] = ('condition', p[2], p[1], p[3])
     elif len(p) == 3:
+        # NOT pode ser '!' ou palavra-chave NOT
         p[0] = ('not', p[2])
     else:
         p[0] = p[1]  # Para expressões booleanas simples
