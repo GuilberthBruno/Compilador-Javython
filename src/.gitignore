@@ -36,4 +36,5 @@ Thumbs.db
 # Manter arquivos importantes
 !README.md
 !*.jy
+!compile_llvm.py
 !.gitignore
