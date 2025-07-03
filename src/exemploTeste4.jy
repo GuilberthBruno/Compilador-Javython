@@ -1,0 +1,26 @@
+program: TesteSimplificado;
+
+int fibonacci(int n) {
+    decIds:
+        resultado : int;
+    
+    if (n < 2) {
+        return n;
+    }
+    
+    resultado = 1;
+    return resultado;
+}
+
+main:
+    decIds:
+        numero : int;
+        fib : int;
+
+    print("Digite um número:");
+    input(numero);
+    
+    fib = fibonacci(numero);
+    print("Fibonacci:", fib);
+
+end

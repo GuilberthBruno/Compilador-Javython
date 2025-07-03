@@ -1,0 +1,53 @@
+program: TesteLoop;
+
+int fibonacci(int n) {
+    decIds:
+        a, b, temp : int;
+        i : int;
+    
+    if (n < 2) {
+        return n;
+    }
+    
+    a = 0;
+    b = 1;
+    i = 2;
+    
+    while (i < n + 1) {
+        temp = a + b;
+        a = b;
+        b = temp;
+        i = i + 1;
+    }
+    
+    return b;
+}
+
+main:
+    decIds:
+        n : int;
+        resultado : int;
+        j : int;
+        contador : int;
+
+    print("=== Teste de Fibonacci e Loop ===");
+    
+    print("Digite um número para calcular Fibonacci:");
+    input(n);
+    
+    resultado = fibonacci(n);
+    print("Fibonacci de", n, "é:", resultado);
+    
+    contador = 0;
+    j = 1;
+    
+    print("Contando de 1 a 5:");
+    while (j < 6) {
+        print("Número:", j);
+        contador = contador + 1;
+        j = j + 1;
+    }
+    
+    print("Total contado:", contador);
+
+end

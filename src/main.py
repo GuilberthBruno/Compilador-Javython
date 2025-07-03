@@ -32,6 +32,64 @@ def save_to_file(content, output_file):
     except Exception as e:
         print(f"\n❌ Erro ao salvar arquivo: {e}")
 
+def validate_llvm_ir(output_file):
+    """Valida o arquivo LLVM IR gerado"""
+    import subprocess
+    try:
+        # Verifica se o arquivo LLVM IR está sintaticamente correto
+        result = subprocess.run(['llvm-as', str(output_file), '-o', '/dev/null'], 
+                              capture_output=True, text=True)
+        if result.returncode == 0:
+            print(f"✅ LLVM IR validado com sucesso!")
+            return True
+        else:
+            print(f"❌ Erro de validação LLVM IR:")
+            print(result.stderr)
+            return False
+    except FileNotFoundError:
+        print("⚠️  llvm-as não encontrado. Pulando validação.")
+        return True
+    except Exception as e:
+        print(f"⚠️  Erro durante validação: {e}")
+        return True
+
+def compile_llvm_ir(llvm_file):
+    """Compila o arquivo LLVM IR para executável"""
+    import subprocess
+    try:
+        base_name = llvm_file.stem
+        asm_file = f"{base_name}.s"
+        exe_file = base_name
+        
+        # Gera assembly
+        print(f"🔧 Gerando assembly: {asm_file}")
+        result = subprocess.run(['llc', str(llvm_file), '-o', asm_file], 
+                              capture_output=True, text=True)
+        if result.returncode != 0:
+            print(f"❌ Erro ao gerar assembly:")
+            print(result.stderr)
+            return False
+        
+        # Gera executável
+        print(f"🔗 Gerando executável: {exe_file}")
+        result = subprocess.run(['gcc', asm_file, '-o', exe_file], 
+                              capture_output=True, text=True)
+        if result.returncode != 0:
+            print(f"❌ Erro ao gerar executável:")
+            print(result.stderr)
+            return False
+        
+        print(f"✅ Executável gerado: {exe_file}")
+        print(f"🎯 Para executar: ./{exe_file}")
+        return True
+        
+    except FileNotFoundError as e:
+        print(f"⚠️  Ferramenta não encontrada: {e}")
+        return False
+    except Exception as e:
+        print(f"⚠️  Erro durante compilação: {e}")
+        return False
+
 def generate_jasmin_code(ast):
     """Gera código Jasmin a partir da AST"""
     # TODO: Implementar gerador de código Jasmin
@@ -63,7 +121,9 @@ def main():
     parser.add_argument('-o', '--output', help='Arquivo de saída')
     parser.add_argument('--jasmin', '-j', action='store_true', help='Gerar código Jasmin')
     parser.add_argument('--llvm', '-l', action='store_true', help='Gerar código LLVM IR')
+    parser.add_argument('--compile', '-c', action='store_true', help='Compilar LLVM IR para executável')
     parser.add_argument('--no-display', action='store_true', help='Não exibir AST e código no terminal')
+    parser.add_argument('--validate', '-v', action='store_true', help='Validar código LLVM IR gerado')
     args = parser.parse_args()
 
     input_file = Path(args.arquivo)
@@ -117,15 +177,45 @@ def main():
             
         else:
             # Gera código LLVM IR (padrão)
-            llvm_generator = LLVMGenerator()
-            llvm_ir = llvm_generator.generate(ast)
-            
-            if not args.no_display:
-                print("\n" + "="*50)
-                print("LLVM IR")
-                print("="*50)
-                print(llvm_ir)
-            save_to_file(llvm_ir, output_file)
+            try:
+                llvm_generator = LLVMGenerator()
+                llvm_ir = llvm_generator.generate(ast)
+                
+                if not args.no_display:
+                    print("\n" + "="*50)
+                    print("LLVM IR")
+                    print("="*50)
+                    print(llvm_ir)
+                save_to_file(llvm_ir, output_file)
+                
+                # Valida o LLVM IR gerado
+                validation_success = True
+                if args.validate or args.compile:
+                    validation_success = validate_llvm_ir(output_file)
+                
+                if validation_success:
+                    print(f"\n✅ Código LLVM IR gerado com sucesso!")
+                    print(f"📁 Arquivo: {output_file}")
+                    
+                    # Compila se solicitado
+                    if args.compile:
+                        if compile_llvm_ir(output_file):
+                            print(f"🎉 Compilação completa!")
+                        else:
+                            print(f"⚠️  Falha na compilação, mas LLVM IR foi gerado.")
+                    else:
+                        print(f"🛠️  Para verificar: llvm-as {output_file}")
+                        print(f"🚀 Para compilar: llc {output_file} -o {output_file.stem}.s")
+                        print(f"🎯 Para executar: gcc {output_file.stem}.s -o {output_file.stem} && ./{output_file.stem}")
+                else:
+                    print(f"\n⚠️  LLVM IR gerado com possíveis problemas.")
+                
+            except Exception as e:
+                print(f"\n❌ Erro na geração de código LLVM IR:")
+                print(f"   {e}")
+                import traceback
+                traceback.print_exc()
+                sys.exit(1)
             
     else:
         print("\n❌ Erros semânticos encontrados:")

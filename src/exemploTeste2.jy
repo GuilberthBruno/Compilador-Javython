@@ -1,0 +1,69 @@
+program: TesteFloat;
+
+decIDs:
+    PI = 3.14159;
+    E = 2.71828;
+
+float calcularCirculo(float raio) {
+    decIds:
+        area, perimetro : float;
+        resultado : float;
+    
+    area = PI * raio * raio;
+    perimetro = 2.0 * PI * raio;
+    resultado = area + perimetro;
+    
+    return resultado;
+}
+
+int arredondar(float numero) {
+    decIds:
+        parte_inteira : int;
+        parte_decimal : float;
+    
+    parte_inteira = numero;
+    parte_decimal = numero - parte_inteira;
+    
+    if (parte_decimal >= 0.5) {
+        return parte_inteira + 1;
+    } else {
+        return parte_inteira;
+    }
+}
+
+main:
+    decIds:
+        raio : float;
+        resultado_float : float;
+        resultado_int : int;
+        temperatura_celsius : float;
+        temperatura_fahrenheit : float;
+
+    print("=== Teste de Operações com Float ===");
+    
+    print("Digite o raio do círculo:");
+    input(raio);
+    
+    resultado_float = calcularCirculo(raio);
+    print("Área + Perímetro =", resultado_float);
+    
+    resultado_int = arredondar(resultado_float);
+    print("Valor arredondado:", resultado_int);
+    
+    print("Digite temperatura em Celsius:");
+    input(temperatura_celsius);
+    
+    temperatura_fahrenheit = (temperatura_celsius * 9.0 / 5.0) + 32.0;
+    print("Temperatura em Fahrenheit:", temperatura_fahrenheit);
+    
+    if (temperatura_celsius > 30.0) {
+        print("Está quente!");
+    } else {
+        if (temperatura_celsius < 10.0) {
+            print("Está frio!");
+        } else {
+            print("Temperatura agradável!");
+        }
+    }
+
+end

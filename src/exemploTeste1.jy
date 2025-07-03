@@ -1,0 +1,119 @@
+program: TesteCompleto;
+
+decIDs:
+    contador_global : int;
+    flag : bool;
+
+int fibonacci(int n) {
+    decIds:
+        a, b, temp : int;
+        i : int;
+    
+    if (n < 2) {
+        return n;
+    }
+    
+    a = 0;
+    b = 1;
+    i = 2;
+    
+    while (i < n + 1) {
+        temp = a + b;
+        a = b;
+        b = temp;
+        i = i + 1;
+    }
+    
+    return b;
+}
+
+bool ehPar(int numero) {
+    decIds:
+        resultado : bool;
+    
+    if (numero == 0) {
+        resultado = true;
+    } else {
+        if (numero == 1) {
+            resultado = false;
+        } else {
+            if (numero == 2) {
+                resultado = true;
+            } else {
+                if (numero == 3) {
+                    resultado = false;
+                } else {
+                    if (numero == 4) {
+                        resultado = true;
+                    } else {
+                        if (numero == 5) {
+                            resultado = false;
+                        } else {
+                            if (numero == 6) {
+                                resultado = true;
+                            } else {
+                                if (numero == 7) {
+                                    resultado = false;
+                                } else {
+                                    if (numero == 8) {
+                                        resultado = true;
+                                    } else {
+                                        resultado = false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    return resultado;
+}
+
+main:
+    decIds:
+        n : int;
+        resultado : int;
+        j : int;
+        eh_par : bool;
+
+    print("=== Teste de Fibonacci e Paridade ===");
+    
+    print("Digite um número para calcular Fibonacci:");
+    input(n);
+    
+    resultado = fibonacci(n);
+    print("Fibonacci de", n, "é:", resultado);
+    
+    eh_par = ehPar(resultado);
+    
+    if (eh_par) {
+        print("O resultado é par");
+    } else {
+        print("O resultado é ímpar");
+    }
+    
+    contador_global = 0;
+    flag = true;
+    
+    print("Testando loop com condição:");
+    j = 1;
+    
+    while (j < 11) {
+        if (j == 7) {
+            flag = false;
+            print("Saindo no número:", j);
+        } else {
+            if (flag) {
+                print("Número:", j);
+            }
+        }
+        contador_global = contador_global + 1;
+        j = j + 1;
+    }
+    
+    print("Total de iterações:", contador_global);
+
+end

@@ -2,7 +2,6 @@ program: ExemploValido;
 
 decIDs:
     contador : int;
-    PI : float;
 
 PI = 3.14;
 

@@ -1,0 +1,26 @@
+program: TesteSimples;
+
+int somar(int a, int b) {
+    decIds:
+        resultado : int;
+    
+    resultado = a + b;
+    return resultado;
+}
+
+main:
+    decIds:
+        x, y : int;
+        soma : int;
+
+    print("Digite dois números:");
+    input(x, y);
+    
+    soma = somar(x, y);
+    print("Soma:", soma);
+    
+    if (soma > 10) {
+        print("Soma maior que 10");
+    }
+
+end
