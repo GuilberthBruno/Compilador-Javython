@@ -179,9 +179,36 @@ class LLVMGenerator:
             self.symbol_table[param_name] = ptr
         
         # Processar o corpo da função
-        # Garantir que processamos todos os statements
+        # Garantir que processamos todos os statements na ordem correta
+        all_statements = []
         for stmt in body:
-            self.visit(stmt)
+            if isinstance(stmt, list):
+                all_statements.extend(stmt)
+            else:
+                all_statements.append(stmt)
+        
+        # Separar statements por tipo para processar em ordem correta
+        declarations = []
+        assigns = []
+        returns = []
+        others = []
+        
+        for s in all_statements:
+            if isinstance(s, tuple) and len(s) > 0:
+                if s[0] == 'declarations':
+                    declarations.append(s)
+                elif s[0] == 'assign':
+                    assigns.append(s)
+                elif s[0] == 'return':
+                    returns.append(s)
+                else:
+                    others.append(s)
+            else:
+                others.append(s)
+        
+        # Processar em ordem: declarations, others, assigns, returns
+        for s in declarations + others + assigns + returns:
+            self.visit(s)
         
         # Adiciona retorno padrão se necessário
         if not self.builder.block.is_terminated:
